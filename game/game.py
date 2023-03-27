@@ -7,6 +7,7 @@ class Game:  # initiating game class.
          self.screen = screen  # setting screen object to screen
          self.clock = clock    # setting clock object
          
+         
     def run(self):  
         self.playing = True 
         self.timer = 0 

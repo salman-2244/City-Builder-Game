@@ -8,9 +8,10 @@ def main():
     playing = True # Setting a flag when the player is playing
 
     pg.init()  # initializing pygame modules
+    pg.display.set_caption("New York City")
     screen = pg.display.set_mode((800, 600)) # creating and setting surface object
     clock = pg.time.Clock() # creating and setting time (for display on main Screen)
-
+    
 
     game = Game(screen, clock)   # calling game class
 
