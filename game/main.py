@@ -1,7 +1,7 @@
 import pygame as pg
 
 from game import Game # need to change if put game in other folder.
-
+# from game import Field 
 def main():
     
     running = True # Setting a flag when the game is started
