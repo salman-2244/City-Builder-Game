@@ -8,7 +8,7 @@ class Game:  # initiating game class.
          self.screen = screen  # setting screen object to screen
          self.clock = clock    # setting clock object
          self.field_size = 30  # size of each field
-         self.grid_rows = int(screen.get_height() / self.field_size)  # calculate rows
+         self.grid_rows = int(screen.get_height() / self.field_size)  # calculate rows (use later)
          self.grid_cols = int(screen.get_width() / self.field_size)  # calculate cols
          self.line_width = 1   # width of grid lines
 
@@ -33,14 +33,17 @@ class Game:  # initiating game class.
                 if event.key == pg.K_ESCAPE: # if player press esc key then exit
                      pg.quit();
                      sys.exit();
+            elif event.type == pg.MOUSEBUTTONUP:
+                pos = pg.mouse.get_pos()
+                print(pos);
                      
     def update(self):
         pass;
              
     def drawGrid(self):
-        for x in range(0, self.screen.get_width(), self.field_size):
+        for x in range(0, self.screen.get_width(), self.field_size): # drawing vertical lines
            pg.draw.line(self.screen, (255, 255, 255), (x, 0), (x, self.screen.get_height()), self.line_width)
-        for y in range(0, self.screen.get_height(), self.field_size):
+        for y in range(0, self.screen.get_height(), self.field_size): # drawing horizonal lines
            pg.draw.line(self.screen, (255, 255, 255), (0, y), (self.screen.get_width(), y), self.line_width)                
                     
     def draw(self):
