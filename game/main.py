@@ -8,7 +8,7 @@ def main():
     playing = True # Setting a flag when the player is playing
 
     pg.init()  # initializing pygame modules
-    pg.display.set_caption("New York City")
+    pg.display.set_caption("New York City") # setting title of the window
     screen = pg.display.set_mode((900, 600)) # creating and setting surface object
     clock = pg.time.Clock() # creating and setting time (for display on main Screen)
     
@@ -18,7 +18,7 @@ def main():
     while running: # as long as game is running 
 
         while playing: # as long as player is playing
-            # game loop here
+           
             game.run() #running the game
 
 if __name__ == "__main__":   # default : Checks if main is not imported 

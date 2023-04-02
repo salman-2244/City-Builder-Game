@@ -1,11 +1,17 @@
 import pygame as pg # importing pygame as pg
 import sys  # importing sys library
+from pygame.locals import * # So I can use the draw module.
 
 class Game:  # initiating game class.
     
     def __init__(self, screen, clock):
          self.screen = screen  # setting screen object to screen
          self.clock = clock    # setting clock object
+         self.field_size = 30  # size of each field
+         self.grid_rows = int(screen.get_height() / self.field_size)  # calculate rows
+         self.grid_cols = int(screen.get_width() / self.field_size)  # calculate cols
+         self.line_width = 1   # width of grid lines
+
          
          
     def run(self):  
@@ -30,10 +36,23 @@ class Game:  # initiating game class.
                      
     def update(self):
         pass;
+             
+    def drawGrid(self):
+        for x in range(0, self.screen.get_width(), self.field_size):
+           pg.draw.line(self.screen, (255, 255, 255), (x, 0), (x, self.screen.get_height()), self.line_width)
+        for y in range(0, self.screen.get_height(), self.field_size):
+           pg.draw.line(self.screen, (255, 255, 255), (0, y), (self.screen.get_width(), y), self.line_width)                
                     
     def draw(self):
         self.screen.fill((0, 255, 0)) # fill the screen 
+        self.drawGrid() # drawing the grid
         pg.display.flip();  # update the changes in display
         
+        
+    
+        
+    
+    
+
         
         
