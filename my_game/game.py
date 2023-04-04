@@ -1,5 +1,4 @@
 import pygame as pg # importing pygame as pg
-from my_game.Field import Field 
 from Field import Field
 
 
@@ -47,11 +46,14 @@ class Game:  # initiating game class.
 
     # addition of the bacground image         
     def addBackground(self):
-        pass;
+        bg = pg.image.load("assets/bg.jpeg")
+        self.screen.blit(bg, (0, 0))
+        
     
 
 
     def drawGrid(self):
+        self.addBackground()
         for x in range(0, self.screen.get_width(), self.field_size): # drawing vertical lines
            pg.draw.line(self.screen, (255, 255, 255), (x, 0), (x, self.screen.get_height()), self.line_width)
         for y in range(0, self.screen.get_height(), self.field_size): # drawing horizonal lines

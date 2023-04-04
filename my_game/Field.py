@@ -1,4 +1,4 @@
-from Zones.zone import Zone
+from Zones.zone import zone
 class Field:
     def __init__(self, x, y, size):
         self.x = x
