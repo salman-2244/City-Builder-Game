@@ -15,8 +15,8 @@ class MainMenu():
   menu_state = "main"
 
   # load button images
-  start_game = pygame.image.load("Buttons/start_game.png")
-  instructions = pygame.image.load("Buttons/instructions.png")
+  start_game = pygame.image.load("Buttons/start.png")
+  instructions = pygame.image.load("Buttons/ini.png")
 
   # button instances
   ins_button = Button(350, 300, instructions, 1)
@@ -41,7 +41,7 @@ class MainMenu():
           print("Clicked play")
         if ins_button.checkInput(MENU_MOUSE_LOC):
           print("Clicked ins")
-  pygame.display.update()
+    pygame.display.update()
 
 
   def start(start_button, ins_button, SCREEN):

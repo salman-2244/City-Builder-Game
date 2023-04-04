@@ -12,8 +12,11 @@ class Dropdown():
         self.__drawMenu = False
         self.__menuActive = False
         self.__options = options
-    
+        self.__activeOption = -1
+
     def draw(self, surface):
         pg.draw.rect(surface, (0,0,0), self.__rect)
         msg = self.font.render(self.main, 1, (0, 0, 0))
         surface.blit(msg, msg.get_rect(center = self.rect.center))
+        # if draw menu is clicked 
+        if self.drawMenu:
