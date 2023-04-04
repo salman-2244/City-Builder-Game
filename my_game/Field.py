@@ -9,3 +9,19 @@ class Field:
         
     def set_zone(self, zone):
         self.zone = zone
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        

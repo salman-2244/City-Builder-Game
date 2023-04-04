@@ -1,5 +1,5 @@
 import pygame as pg # importing pygame as pg
-from game.Field import Field 
+from my_game.Field import Field 
 import sys  # importing sys library
 from pygame.locals import * # So I can use the draw module.
 

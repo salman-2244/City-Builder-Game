@@ -1,7 +1,6 @@
 import pygame as pg
+from my_game import game # need to change if put game in other folder.
 
-from game import Game # need to change if put game in other folder.
-# from game import Field 
 def main():
     
     running = True # Setting a flag when the game is started
@@ -13,7 +12,7 @@ def main():
     clock = pg.time.Clock() # creating and setting time (for display on main Screen)
     
 
-    game = Game(screen, clock)   # calling game class
+    game = game(screen, clock)   # calling game class
 
     while running: # as long as game is running 
 
