@@ -1,9 +1,8 @@
 import pygame as pg # importing pygame as pg
-<<<<<<< HEAD:my_game/game.py
 from my_game.Field import Field 
-=======
 from Field import Field
->>>>>>>  Game changes:game/game.py
+
+
 import sys  # importing sys library
 from pygame.locals import * # So I can use the draw module.
 
