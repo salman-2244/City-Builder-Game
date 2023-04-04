@@ -1,11 +1,9 @@
 import pygame as pg
-<<<<<<< HEAD:my_game/main.py
 from my_game import game # need to change if put game in other folder.
 
-=======
 from game import Game # need to change if put game in other folder.
 # from game import Field 
->>>>>>> GUI changes start game:game/main.py
+
 def main():
     
     running = True # Setting a flag when the game is started

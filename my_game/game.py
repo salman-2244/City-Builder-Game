@@ -44,7 +44,13 @@ class Game:  # initiating game class.
                      
     def update(self):
         pass;
-             
+
+    # addition of the bacground image         
+    def addBackground(self):
+        pass;
+    
+
+
     def drawGrid(self):
         for x in range(0, self.screen.get_width(), self.field_size): # drawing vertical lines
            pg.draw.line(self.screen, (255, 255, 255), (x, 0), (x, self.screen.get_height()), self.line_width)
