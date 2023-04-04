@@ -1,5 +1,5 @@
 import pygame as pg # importing pygame as pg
-from game import Field 
+from game.Field import Field
 import sys  # importing sys library
 from pygame.locals import * # So I can use the draw module.
 
@@ -16,7 +16,7 @@ class Game:  # initiating game class.
 
          
          
-    def run(self):  
+    def run(self): 
         self.playing = True 
         self.timer = 0 
         while self.playing: # while player is playing
@@ -64,7 +64,7 @@ class Game:  # initiating game class.
         
         
     
-    
+        
     
     
 
