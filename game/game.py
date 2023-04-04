@@ -1,5 +1,5 @@
 import pygame as pg # importing pygame as pg
-from game import Field 
+from game.Field import Field 
 import sys  # importing sys library
 from pygame.locals import * # So I can use the draw module.
 
@@ -49,12 +49,12 @@ class Game:  # initiating game class.
            pg.draw.line(self.screen, (255, 255, 255), (0, y), (self.screen.get_width(), y), self.line_width) 
            
        
-        for row in range(self.grid_rows):
-            for col in range(self.grid_cols):
-                x = col * self.field_size
-                y = row * self.field_size
-                field = Field(x, y, self.field_size, None)
-                self.fields.append(field)
+        # for row in range(self.grid_rows):
+        #     for col in range(self.grid_cols):
+        #         x = col * self.field_size
+        #         y = row * self.field_size
+        #         field = Field(x, y, self.field_size, None)
+        #         self.fields.append(field)
                          
                     
     def draw(self):
