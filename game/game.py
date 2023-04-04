@@ -16,7 +16,7 @@ class Game:  # initiating game class.
 
          
          
-    def run(self):  
+    def run(self): 
         self.playing = True 
         self.timer = 0 
         while self.playing: # while player is playing
