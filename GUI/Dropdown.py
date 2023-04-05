@@ -19,4 +19,10 @@ class Dropdown():
         msg = self.font.render(self.main, 1, (0, 0, 0))
         surface.blit(msg, msg.get_rect(center = self.rect.center))
         # if draw menu is clicked 
-        if self.drawMenu:
+        if self.__drawMenu:
+            for i, text in enumerate(self.options):
+                rect = self.rect.copy()
+                rect.y += (i+1) * self.rect.height
+                msg = self.font.render(text, 1, (0, 0, 0))
+                surface.blit(msg, msg.get_rect(center = (self.rect.centerx, self.rect.centery + 20 * (i + 1))))
+
