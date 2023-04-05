@@ -24,5 +24,13 @@ class Dropdown():
                 rect = self.rect.copy()
                 rect.y += (i+1) * self.rect.height
                 msg = self.font.render(text, 1, (0, 0, 0))
-                surface.blit(msg, msg.get_rect(center = (self.rect.centerx, self.rect.centery + 20 * (i + 1))))
+                surface.blit(msg, msg.get_rect(center = (self.rect.centerx, self.rect.centery + 20 * (i + 1)))) # maybe change this part
+
+    def update(self, events):
+        mouse = pg.mouse.get_pos()
+        self.__menuActive = self.rect.collidepoint(mouse)
+        
+
+            
+
 
