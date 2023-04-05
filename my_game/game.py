@@ -56,7 +56,7 @@ class Game:  # initiating game class.
         self.addBackground()
         for x in range(0, self.screen.get_width(), self.field_size): # drawing vertical lines
            pg.draw.line(self.screen, (255, 255, 255), (x, 0), (x, self.screen.get_height()), self.line_width)
-        for y in range(0, self.screen.get_height(), self.field_size): # drawing horizonal lines
+        for y in range(120, self.screen.get_height(), self.field_size): # drawing horizonal lines
            pg.draw.line(self.screen, (255, 255, 255), (0, y), (self.screen.get_width(), y), self.line_width) 
            
        
@@ -69,7 +69,7 @@ class Game:  # initiating game class.
                          
                     
     def draw(self):
-        self.screen.fill((0, 255, 0)) # fill the screen 
+        self.screen.fill((0, 0, 0)) # fill the screen 
         self.drawGrid() # drawing the grid
         pg.display.flip();  # update the changes in display
         
