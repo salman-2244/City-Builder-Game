@@ -47,6 +47,7 @@ class Game:  # initiating game class.
     # addition of the bacground image         
     def addBackground(self):
         bg = pg.image.load("assets/bg.jpeg")
+        bg = pg.transform.scale(bg, (900, 600))
         self.screen.blit(bg, (0, 0))
         
     
@@ -55,8 +56,8 @@ class Game:  # initiating game class.
     def drawGrid(self):
         self.addBackground()
         for x in range(0, self.screen.get_width(), self.field_size): # drawing vertical lines
-           pg.draw.line(self.screen, (255, 255, 255), (x, 120), (x, self.screen.get_height()), self.line_width)
-        for y in range(120, self.screen.get_height(), self.field_size): # drawing horizonal lines
+           pg.draw.line(self.screen, (255, 255, 255), (x, 90), (x, self.screen.get_height()), self.line_width)
+        for y in range(90, self.screen.get_height(), self.field_size): # drawing horizonal lines
            pg.draw.line(self.screen, (255, 255, 255), (0, y), (self.screen.get_width(), y), self.line_width) 
            
        
