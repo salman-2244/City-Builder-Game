@@ -73,7 +73,7 @@ class Game:  # initiating game class.
         self.screen.fill((0, 0, 0)) # fill the screen 
         self.drawGrid() # drawing the grid
         pg.display.flip();  # update the changes in display
-        
+    
         
     
         
