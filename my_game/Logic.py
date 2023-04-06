@@ -31,5 +31,32 @@ class World:
             if field.x == x and field.y == y:
                 return field
         return None
+
+    def add_road(self, x, y):
+        field = self.get_field(x, y)
+        if field is not None:
+            field.road = True
     
-               
+    def check_road(self, x, y):
+        field = self.get_field(x, y)
+        if field is not None:
+            return field.road
+        return False 
+
+    def get_fields(self):
+        return self.Fields
+    
+    def add_zone(self, zone):
+        self.Zones.append(zone)
+    
+    def set_zone(self, x, y, zone):
+        field = self.get_field(x, y)
+        if field is not None:
+            field.set_zone(zone)
+    
+    def get_zone(self, x, y):
+        field = self.get_field(x, y)
+        if field is not None:
+            return field.zone
+        return None
+    
