@@ -105,7 +105,7 @@ class inudstrial(zone):
     def getEmployees(self):
         return self.employees
     
-class general(Zone): #roads, change in UML
+class general(zone): #roads, change in UML
     def __init__(self, name, cost, capacity, saturation, type):
         super().__init__(name, cost, capacity, saturation, type)
         #self.color = (0, 0, 0)
@@ -141,7 +141,7 @@ class general(Zone): #roads, change in UML
         return self.forests
     
 #creating the service zone
-class service(Zone):
+class service(zone):
     def __init__(self, name, cost, capacity, saturation, type):
         super().__init__(name, cost, capacity, saturation, type)
         #self.color = (255, 0, 0)

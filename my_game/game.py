@@ -1,5 +1,7 @@
 import pygame as pg # importing pygame as pg
-from my_game.Field import Field 
+from Field import Field
+
+
 import sys  # importing sys library
 from pygame.locals import * # So I can use the draw module.
 
@@ -41,11 +43,21 @@ class Game:  # initiating game class.
                      
     def update(self):
         pass;
-             
+
+    # addition of the bacground image         
+    def addBackground(self):
+        bg = pg.image.load("assets/bg.jpeg")
+        bg = pg.transform.scale(bg, (900, 600))
+        self.screen.blit(bg, (0, 0))
+        
+    
+
+
     def drawGrid(self):
+        self.addBackground()
         for x in range(0, self.screen.get_width(), self.field_size): # drawing vertical lines
-           pg.draw.line(self.screen, (255, 255, 255), (x, 0), (x, self.screen.get_height()), self.line_width)
-        for y in range(0, self.screen.get_height(), self.field_size): # drawing horizonal lines
+           pg.draw.line(self.screen, (255, 255, 255), (x, 90), (x, self.screen.get_height()), self.line_width)
+        for y in range(90, self.screen.get_height(), self.field_size): # drawing horizonal lines
            pg.draw.line(self.screen, (255, 255, 255), (0, y), (self.screen.get_width(), y), self.line_width) 
            
        
@@ -58,10 +70,10 @@ class Game:  # initiating game class.
                          
                     
     def draw(self):
-        self.screen.fill((0, 255, 0)) # fill the screen 
+        self.screen.fill((0, 0, 0)) # fill the screen 
         self.drawGrid() # drawing the grid
         pg.display.flip();  # update the changes in display
-        
+    
         
     
         
