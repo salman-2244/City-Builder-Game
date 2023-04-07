@@ -2,7 +2,7 @@ import pygame as pg
 import sys
 from GUI.button import Button
 class Dropdown():
-    def __init__(self,text,x,y,w,h, main, options):
+    def __init__(self,text,x,y,w,h, main, options): # add button image here
         self.__x = x
         self.__y = y
         self.__w = w
@@ -14,43 +14,43 @@ class Dropdown():
         self.__menuActive = False
         self.__options = options
         self.__activeOption = -1
-         
+        self.ins = pg.image.load("Buttons/ini.png")
+        self.ins_button = Button(self.__x, self.__y, self.ins, 1)
+        # each option is a button
 
     
     def draw(self, surface):
-        pg.draw.rect(surface, (0,0,0), self.__rect)
-        msg = self.__text.render(self.__main, 1, (0, 0, 0))
-        surface.blit(msg, msg.get_rect(center = self.__rect.center))instructions = 
-
-        # create the button for the dropdown
-        ins = pg.image.load("Buttons/ini.png")
-        # button instances
-        ins_button = Button(self.__x, self.__y, ins, 1)
+        self.ins_button.update(surface)
+       
         # if draw menu is clicked 
         if self.__drawMenu:
             for i, text in enumerate(self.__options):
-                rect = self.__rect.copy()
-                rect.y += (i+1) * self.__rect.height
+                rect = self.ins_button.getRect().copy()
+                print(rect.y)
+                rect = rect.move(0, (i+ 1) * rect.height)
+                pg.draw.rect(surface, (255, 255, 255), rect, 0)
                 msg = self.__text.render(text,1, (0, 0, 0))
                 surface.blit(msg, msg.get_rect(center = rect.center)) # maybe change this part
 
     def update(self, events):
+        clickCount = 0
         mouse = pg.mouse.get_pos()
-        self.__menuActive = self.__rect.collidpoint(mouse)
+        self.__menuActive = self.ins_button.checkInput(mouse)
         self.__activeOption = -1
 
+        if self.__menuActive:
+            clickCount += 1
         # checking from the options
         for i in range(len(self.__options)):
-            rect = self.__rect.copy()
-            rect.y += (i+1) * self.__rect.height
+            rect = self.ins_button.getRect().copy()
+            rect = rect.move(0, (i+ 1) * rect.height)
+            # have a rect of the button and then check if the mouse is in the rect
             if rect.collidepoint(mouse):
                 self.__activeOption = i
-                break
-        if not self.__menuActive:
-            self.__drawMenu = False
+                clickCount += 1
         
         for event in events:
-            if event.type ++ pg.MOUSEBUTTONDOWN:
+            if event.type == pg.MOUSEBUTTONDOWN:
                 if self.__menuActive:
                     self.__drawMenu = not self.__drawMenu
                 elif self.__activeOption > -1 and self.__drawMenu: 
@@ -61,10 +61,6 @@ class Dropdown():
 pg.init()
 clock = pg.time.Clock()
 screen = pg.display.set_mode((800, 600))
-COLOR_INACTIVE = (100, 80, 255)
-COLOR_ACTIVE = (100, 200, 255)
-COLOR_LIST_INACTIVE = (255, 100, 100)
-COLOR_LIST_ACTIVE = (255, 150, 150)
 
 
 l1 = list1 = Dropdown(pg.font.SysFont(None, 30), 

@@ -60,3 +60,6 @@ class World:
             return field.zone
         return None
     
+    def get_zones(self):
+        return self.Zones
+    

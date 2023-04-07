@@ -10,6 +10,9 @@ class Button():
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.clicked = False
+        
+    def getRect(self):
+        return self.rect
 
 
     def update(self,screen):
