@@ -1,9 +1,10 @@
 import pygame as pg
+from GUI.Dropdown import Dropdown
 # need to change if put game in other folder.
 
 from game import Game # need to change if put game in other folder.
 # from game import Field 
-
+from my_game.Logic import World
 def main():
     
     running = True # Setting a flag when the game is started
@@ -22,6 +23,16 @@ def main():
         while playing: # as long as player is playing
            
             game.run() #running the game
+    
+    image = pg.image.load("Buttons/ini.png")
+    
+    l1 = list1 = Dropdown(pg.font.SysFont(None, 30), 
+    50, 50, 200, 50,  
+    "Zones", ["General", "Residential", "Commercial", "Industrial"], image)
+
+    # adding the logic of the game to the screen        
+    world = World()
+    World.init_fields(Game.screen)
 
 if __name__ == "__main__":   # default : Checks if main is not imported 
     main()
