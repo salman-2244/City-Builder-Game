@@ -1,7 +1,7 @@
 # from Zones.zone import zone
 import pygame as pg
 class Field:
-    def __init__(self, x, y, size):
+    def __init__(self, x, y, size, pos):
         self.x = x
         self.y = y
         self.size = size # size of the individual tile
@@ -11,7 +11,11 @@ class Field:
         self.road = False # bool to check if there is a road on the field, if true make the color grey over the background
         self.selected = False
         self.rect = pg.Rect(self.x, self.y, self.size, self.size)
+        self.posX = pos[0]
+        self.posY = pos[1]
         
+    def getX(self):
+        return self.x
     
     def set_zone(self, zone):
         self.zone = zone
@@ -20,6 +24,7 @@ class Field:
     def build_road(self):
         if self.road == True:
             self.color  = (128, 128, 128)
+    
     
         
         

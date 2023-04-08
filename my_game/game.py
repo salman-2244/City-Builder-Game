@@ -73,7 +73,7 @@ class Game:  # initiating game class.
                          
                     
     def draw(self):
-        self.addBackground()
+        
         image = pg.image.load("/Users/markoboreta/Dropbox/Semester 6/City_builder/Pyton_G/blue-fox/GUI/Buttons/zones.png")
         clock = pg.time.Clock()
         #gen_img = pg.image.load("/Users/markoboreta/Dropbox/Semester 6/City_builder/Pyton_G/blue-fox/GUI/Buttons/start.png")
@@ -88,8 +88,12 @@ class Game:  # initiating game class.
         self.screen
         while run:
             
+            self.addBackground()
+            self.drawGrid()
+
              # drawing the grid
             #pg.display.flip();  # update the changes in display
+            
             self.timer += 1 # incrementing timer
             clock.tick(100)
 
@@ -120,8 +124,9 @@ class Game:  # initiating game class.
             # for the build dropdown menu
             selected_option_2 = list2.update(event_list)
             if selected_option_2 >= 0:
+                
                 list2.__main = list2.options[selected_option_2]
-                self.drawGrid()
+                
                 print("Selected option: ", list2.options[selected_option_2])
                 if list2.options[selected_option_2] == "Police":
                     print("Police to build selected")

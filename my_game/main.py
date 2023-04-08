@@ -17,8 +17,12 @@ def main():
     
 
     game = Game(screen, clock)   # calling game class
+    world = World()
+    world.init_fields(screen)
+    world.draw_roads(screen)
 
     while running: # as long as game is running 
+        
 
         while playing: # as long as player is playing
            
@@ -33,7 +37,6 @@ if __name__ == "__main__":   # default : Checks if main is not imported
         
     
     # adding the logic of the game to the screen        
-    world = World()
-    World.init_fields(Game.screen)
+    
     pg.quit()
     exit()

@@ -17,20 +17,41 @@ class World:
 
     def init_fields(self, screen): # initializing fields
         #initialize 2D array which represents the grid
-        screen = Game.screen # setting screen object to screen
-        clock = Game.clock    # setting clock object
+        #screen = Game.screen # setting screen object to screen
+        #clock = Game.clock    # setting clock object
         field_size = 30  # size of each field
         grid_rows = int(screen.get_height() / field_size)  # calculate rows (use later)
         grid_cols = int(screen.get_width() / field_size)  # calculate cols
-        for row in range(grid_rows):
-            for col in range(grid_cols):
-                self.Fields.append(Field(col * field_size, row * field_size, field_size))
+        pos = (0, 90)
+        """for row in range(grid_cols):
+            for col in range(grid_rows):
+                if(row == 3):
+                    self.Fields[row][col] = Field(row * field_size, col * field_size, field_size, pos)
+        print(self.Fields[0][0])"""
+        self.Fields = [[ Field(x, y, field_size, pos) for x in range(grid_rows)] for y in range (grid_cols)]
         
+        for field in self.Fields:
+                for f in field:
+                    if(f.getX() == 3):
+                        f.set_zone("General")
+                        f.set_road()
+                        f.build_road()
+                        
+                
+
+
+            
     def get_field(self, x, y):
         for field in self.Fields:
             if field.x == x and field.y == y:
                 return field
         return None
+    
+    def draw_roads(self, surf):
+        for field in self.Fields:
+            if field.road:
+                pg.draw.rect(surf, field.color, pg.Rect(field.posX, field.posY, 30, 30))
+                
 
     def add_road(self, x, y):
         field = self.get_field(x, y)
@@ -63,4 +84,5 @@ class World:
     def get_zones(self):
         return self.Zones
     
+        
     
