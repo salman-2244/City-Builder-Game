@@ -19,7 +19,7 @@ def main():
     game = Game(screen, clock)   # calling game class
     world = World()
     world.init_fields(screen)
-    world.draw_roads(screen)
+    #world.draw_roads(screen)
 
     while running: # as long as game is running 
         

@@ -30,13 +30,16 @@ class World:
         print(self.Fields[0][0])"""
         self.Fields = [[ Field(x, y, field_size, pos) for x in range(grid_rows)] for y in range (grid_cols)]
         
-        for field in self.Fields:
+        # addition of the color in the 2d list for the road in the 3rd row
+        print(self.Fields)
+        """for field in self.Fields:
                 for f in field:
-                    if(f.getX() == 3):
-                        f.set_zone("General")
-                        f.set_road()
-                        f.build_road()
-                        
+                    print(f)
+        if(f.getX() == 3): # if the field is in the 3rd row
+        f.set_zone("General") # set the zone to general
+                        f.set_road() # set the road to true
+                        f.build_road() # build the road
+"""
                 
 
 
@@ -47,24 +50,24 @@ class World:
                 return field
         return None
     
-    def draw_roads(self, surf):
+    """def draw_roads(self, surf): # drawing roads
         for field in self.Fields:
             if field.road:
                 pg.draw.rect(surf, field.color, pg.Rect(field.posX, field.posY, 30, 30))
-                
+                """
 
-    def add_road(self, x, y):
+    def add_road(self, x, y): # adding roads to the field
         field = self.get_field(x, y)
         if field is not None:
             field.road = True
     
-    def check_road(self, x, y):
+    def check_road(self, x, y): # checking if there is a road on the field
         field = self.get_field(x, y)
         if field is not None:
             return field.road
         return False 
 
-    def get_fields(self):
+    def get_fields(self): # getting the fields
         return self.Fields
     
     def add_zone(self, zone):
