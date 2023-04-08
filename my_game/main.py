@@ -1,5 +1,5 @@
 import pygame as pg
-from game import Game # need to change if put game in other folder.
+# need to change if put game in other folder.
 
 from game import Game # need to change if put game in other folder.
 # from game import Field 
