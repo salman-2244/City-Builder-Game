@@ -1,5 +1,8 @@
 import pygame as pg # importing pygame as pg
 from Field import Field
+import sys  # importing sys library
+from GUI.Dropdown import Dropdown
+from GUI.button import Button
 #sfrom my_game.Logic import World
 
 import sys  # importing sys library
@@ -54,7 +57,7 @@ class Game:  # initiating game class.
 
 
     def drawGrid(self):
-        self.addBackground()
+        
         for x in range(0, self.screen.get_width(), self.field_size): # drawing vertical lines
            pg.draw.line(self.screen, (255, 255, 255), (x, 90), (x, self.screen.get_height()), self.line_width)
         for y in range(90, self.screen.get_height(), self.field_size): # drawing horizonal lines
@@ -70,11 +73,73 @@ class Game:  # initiating game class.
                          
                     
     def draw(self):
+        self.addBackground()
+        image = pg.image.load("/Users/markoboreta/Dropbox/Semester 6/City_builder/Pyton_G/blue-fox/GUI/Buttons/zones.png")
+        clock = pg.time.Clock()
+        #gen_img = pg.image.load("/Users/markoboreta/Dropbox/Semester 6/City_builder/Pyton_G/blue-fox/GUI/Buttons/start.png")
         self.screen.fill((0, 0, 0)) # fill the screen 
-        self.drawGrid() # drawing the grid
-        pg.display.flip();  # update the changes in display
-        self.timer += 1 # incrementing timer
+        # for the zone dropdown menu
+        l1 = list1 = Dropdown(pg.font.SysFont(None, 30), 
+        700, 0, 50, 30,  
+        "Zones", ["General", "Residential", "Commercial", "Industrial"], image)
+        image_build = pg.image.load("/Users/markoboreta/Dropbox/Semester 6/City_builder/Pyton_G/blue-fox/GUI/Buttons/build.png")
+        l2 = list2 = Dropdown(pg.font.SysFont(None, 30), 600, 0, 50, 30, "Build", ["Police", "Forest", "Stadium", "Road"], image_build)
+        run = True
+        self.screen
+        while run:
+            
+             # drawing the grid
+            #pg.display.flip();  # update the changes in display
+            self.timer += 1 # incrementing timer
+            clock.tick(100)
 
+            event_list = pg.event.get()
+            for event in event_list:
+                if event.type == pg.QUIT:
+                    run = False
+
+
+            selected_option = list1.update(event_list)
+            if selected_option >= 0:
+                list1.__main = list1.options[selected_option]
+                print("Selected option: ", list1.options[selected_option])
+                if list1.options[selected_option] == "General":
+                    print("General zone selected")
+                elif list1.options[selected_option] == "Residential":
+                    print("Residential zone selected")
+                elif list1.options[selected_option] == "Commercial":
+                    print("Commercial zone selected")
+                elif list1.options[selected_option] == "Industrial":
+                    print("Industrial zone selected")
+                else:
+                    print("Error")
+
+            #self.fill((255, 255, 255))
+            list1.draw(self.screen)
+
+            # for the build dropdown menu
+            selected_option_2 = list2.update(event_list)
+            if selected_option_2 >= 0:
+                list2.__main = list2.options[selected_option_2]
+                self.drawGrid()
+                print("Selected option: ", list2.options[selected_option_2])
+                if list2.options[selected_option_2] == "Police":
+                    print("Police to build selected")
+                elif list2.options[selected_option_2] == "Forest":
+                    print("Forest to build selected")
+                elif list2.options[selected_option_2] == "Stadium":
+                    print("Stadium to build selected")
+                elif list2.options[selected_option_2] == "Road":
+                    print("Road to build selected")
+                else:
+                    print("Error")
+            list2.draw(self.screen)
+            pg.display.flip()
+        
+            
+        pg.quit()
+        exit()
+        
         #world = World()
         #World.init_fields(self, self.screen)
         

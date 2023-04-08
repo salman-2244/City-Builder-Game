@@ -12,8 +12,15 @@ class Field:
         self.selected = False
         self.rect = pg.Rect(self.x, self.y, self.size, self.size)
         
+    
     def set_zone(self, zone):
         self.zone = zone
+    def set_road(self):
+        self.road = True
+    def build_road(self):
+        if self.road == True:
+            self.color  = (128, 128, 128)
+    
         
         
         

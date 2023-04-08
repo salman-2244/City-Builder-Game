@@ -27,9 +27,10 @@ class Dropdown():
             for i, text in enumerate(self.options):
                 rect = self.ins_button.getRect().copy()
                 rect = rect.move(0, (i+ 1) * rect.height)
-                pg.draw.rect(surface, (255, 255, 255), rect, 0)
+                #pg.draw.rect(surface, (0, 0, 0), rect, 0)
                 msg = self.__text.render(text,1, (0, 0, 0))
                 surface.blit(msg, msg.get_rect(center = rect.center))
+
 
     def update(self, events):
         clickCount = 0
@@ -58,38 +59,7 @@ class Dropdown():
                     return self.__activeOption
         return -1
     
-"""pg.init()
-clock = pg.time.Clock()
-screen = pg.display.set_mode((800, 600))
 
-image = pg.image.load("Buttons/ini.png")
-
-l1 = list1 = Dropdown(pg.font.SysFont(None, 30), 
-    50, 50, 200, 50,  
-    "Zones", ["General", "Residential", "Commercial", "Industrial"], image)
-"""
-
-
-run = True
-while run:
-    clock.tick(100)
-
-    event_list = pg.event.get()
-    for event in event_list:
-        if event.type == pg.QUIT:
-            run = False
-
-    selected_option = list1.update(event_list)
-    if selected_option >= 0:
-        list1.__main = list1.options[selected_option]
-        print("Selected option: ", list1.options[selected_option])
-
-    screen.fill((255, 255, 255))
-    list1.draw(screen)
-    pg.display.flip()
-    
-pg.quit()
-exit()
 
             
 

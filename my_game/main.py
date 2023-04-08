@@ -24,15 +24,16 @@ def main():
            
             game.run() #running the game
     
-    image = pg.image.load("Buttons/ini.png")
-    
-    l1 = list1 = Dropdown(pg.font.SysFont(None, 30), 
-    50, 50, 200, 50,  
-    "Zones", ["General", "Residential", "Commercial", "Industrial"], image)
 
-    # adding the logic of the game to the screen        
-    world = World()
-    World.init_fields(Game.screen)
+    
 
 if __name__ == "__main__":   # default : Checks if main is not imported 
     main()
+    
+        
+    
+    # adding the logic of the game to the screen        
+    world = World()
+    World.init_fields(Game.screen)
+    pg.quit()
+    exit()
