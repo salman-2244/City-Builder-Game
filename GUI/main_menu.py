@@ -1,5 +1,6 @@
 import pygame, sys
 from GUI.button import Button
+import my_game.main
 
 class MainMenu():
   pygame.display.set_caption("Main Menu")
@@ -11,8 +12,8 @@ class MainMenu():
 
   SCREEN = pygame.display.set_mode((SCREEN_W, SCREEN_H))
   pygame.display.set_caption("Main Menu")
-  SCREEN.blit(bg, (0, 0))
-  BG = SCREEN.fill((200, 190, 190))# load background
+  #SCREEN.blit(bg, (0, 0))
+  
 
   # game variables
   menu_state = "main"
@@ -22,12 +23,12 @@ class MainMenu():
   instructions = pygame.image.load("Buttons/ini.png")
 
   # button instances
-  ins_button = Button(350, 300, instructions, 1)
-  start_button = Button(350, 500, start_game, 1)
+  ins_button = Button(365, 300, instructions, 1)
+  start_button = Button(365, 250, start_game, 1)
 
   while True:
-    #SCREEN.blit(BG, (0, 0))
-    SCREEN.fill("white")
+    SCREEN.blit(bg, (0, 0))
+    #SCREEN.fill("white")
     MENU_MOUSE_LOC = pygame.mouse.get_pos()
     MENU_TEXT = pygame.font.Font(None).render("MAIN MENU", True, "red")
     MENU_RECT = MENU_TEXT.get_rect(center=(640, 100))
@@ -42,6 +43,7 @@ class MainMenu():
       if event.type == pygame.MOUSEBUTTONDOWN:
         if start_button.checkInput(MENU_MOUSE_LOC):
           print("Clicked play")
+          my_game.main.main() # this is where the game starts
         if ins_button.checkInput(MENU_MOUSE_LOC):
           print("Clicked ins")
     pygame.display.update()

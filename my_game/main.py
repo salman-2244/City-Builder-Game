@@ -2,7 +2,7 @@ import pygame as pg
 from GUI.Dropdown import Dropdown
 # need to change if put game in other folder.
 
-from game import Game # need to change if put game in other folder.
+from my_game.game import Game # need to change if put game in other folder.
 # from game import Field 
 from my_game.Logic import World
 def main():

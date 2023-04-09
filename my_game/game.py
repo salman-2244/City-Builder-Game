@@ -1,5 +1,5 @@
 import pygame as pg # importing pygame as pg
-from Field import Field
+from my_game.Field import Field
 import sys  # importing sys library
 from GUI.Dropdown import Dropdown
 from GUI.button import Button
@@ -49,7 +49,7 @@ class Game:  # initiating game class.
 
     # addition of the bacground image         
     def addBackground(self):
-        bg = pg.image.load("assets/bg.jpg")
+        bg = pg.image.load("/Users/markoboreta/Dropbox/Semester 6/City_builder/Pyton_G/blue-fox/my_game/Assets/bg.jpg")
         bg = pg.transform.scale(bg, (900, 600))
         self.screen.blit(bg, (0, 0))
         
