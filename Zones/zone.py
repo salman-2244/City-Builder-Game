@@ -50,14 +50,10 @@ class residential(zone):
         self.max_houses = 0
         self.max_residents = 0
 
-    def setMaxHouses(self, max_houses):
-        self.max_houses = max_houses
-    def setMaxResidents(self, max_residents):
-        self.max_residents = max_residents
-    def getMaxHouses(self):
-        return self.max_houses
-    def getMaxResidents(self):
-        return self.max_residents
+    
+
+    def drawImg(self, screen):
+        pass; 
 
     def addHouse(self, house):
         self.houses.append(house)

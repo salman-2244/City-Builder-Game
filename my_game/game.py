@@ -87,7 +87,7 @@ class Game:  # initiating game class.
         run = True
         self.screen
         while run:
-            
+
             self.addBackground()
             self.drawGrid()
 
@@ -102,15 +102,17 @@ class Game:  # initiating game class.
                 if event.type == pg.QUIT:
                     run = False
 
-
+            # for the zone dropdown menu
             selected_option = list1.update(event_list)
             if selected_option >= 0:
                 list1.__main = list1.options[selected_option]
                 print("Selected option: ", list1.options[selected_option])
                 if list1.options[selected_option] == "General":
                     print("General zone selected")
+
                 elif list1.options[selected_option] == "Residential":
                     print("Residential zone selected")
+                    # Residential zone selected to be added here
                 elif list1.options[selected_option] == "Commercial":
                     print("Commercial zone selected")
                 elif list1.options[selected_option] == "Industrial":
@@ -136,6 +138,7 @@ class Game:  # initiating game class.
                     print("Stadium to build selected")
                 elif list2.options[selected_option_2] == "Road":
                     print("Road to build selected")
+                    # FUnct for road to be added here
                 else:
                     print("Error")
             list2.draw(self.screen)

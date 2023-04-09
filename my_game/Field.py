@@ -2,7 +2,7 @@
 import pygame as pg
 class Field:
     def __init__(self, x, y, size, pos):
-        self.x = x
+        self.x = x # in 2d array
         self.y = y
         self.size = size # size of the individual tile
         self.grid_pos = None
@@ -11,7 +11,7 @@ class Field:
         self.road = False # bool to check if there is a road on the field, if true make the color grey over the background
         self.selected = False
         self.rect = pg.Rect(self.x, self.y, self.size, self.size)
-        self.posX = pos[0]
+        self.posX = pos[0] # position on the grid
         self.posY = pos[1]
         
     def getX(self):
