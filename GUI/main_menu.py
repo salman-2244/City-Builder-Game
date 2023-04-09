@@ -7,8 +7,11 @@ class MainMenu():
   pygame.init()
   SCREEN_W = 900
   SCREEN_H = 600
+  bg = pygame.image.load("menu.png")
+
   SCREEN = pygame.display.set_mode((SCREEN_W, SCREEN_H))
   pygame.display.set_caption("Main Menu")
+  SCREEN.blit(bg, (0, 0))
   BG = SCREEN.fill((200, 190, 190))# load background
 
   # game variables
