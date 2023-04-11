@@ -1,10 +1,13 @@
 import pygame as pg
-from GUI.Dropdown import Dropdown
-# need to change if put game in other folder.
 
-from my_game.game import Game # need to change if put game in other folder.
+# from GUI.Dropdown import Dropdown   
+# need to change if put game in other folder.
+from game import Game
+# from Logic import World
+# from my_game.game import Game 
+# # need to change if put game in other folder.
 # from game import Field 
-from my_game.Logic import World
+
 def main():
     
     running = True # Setting a flag when the game is started
@@ -17,8 +20,8 @@ def main():
     
 
     game = Game(screen, clock)   # calling game class
-    world = World()
-    world.init_fields(screen)
+    # world = World()
+    # world.init_fields(screen)
     #world.draw_roads(screen)
 
     while running: # as long as game is running 
@@ -38,5 +41,5 @@ if __name__ == "__main__":   # default : Checks if main is not imported
     
     # adding the logic of the game to the screen        
     
-    pg.quit()
-    exit()
+    # pg.quit()
+    # exit()

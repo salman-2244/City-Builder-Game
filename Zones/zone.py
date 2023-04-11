@@ -8,7 +8,7 @@ class zone:
         self.__capacity = capacity
         self.__saturation = saturation
         self.__type = type
-        #self.__color = (0, 0, 0)
+        self.__color = (0, 0, 0)
         self.__x = 0
         self.__y = 0
         self.__width = 0
