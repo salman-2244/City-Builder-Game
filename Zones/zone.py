@@ -1,4 +1,6 @@
 import pygame   # import pygame library
+import json
+
 
 
 class zone:
@@ -43,23 +45,35 @@ class residential(zone):
         #self.color = (0, 255, 0) 
         self.width = 0
         self.height = 0
-        self.residents = []
+        self.residents = {} # dictionary of residents
         self.max_residents =  ((self.width * self.height) / 900) * 4 # max 4 residents per square
+
 
     
 
     def drawImg(self, screen):
         pass; 
     def addResident(self, resident):
-        self.residents.append(resident)
+        self.residents.update(resident)
     def removeResident(self, resident):
         self.residents.remove(resident)
     def getResidents(self):
         return self.residents
     def initialResidents(self):
         area = self.width * self.height
-        self.residents = (self.area / 900) * 2 # 2 residents per square
+        return (self.area / 900) * 2 # 2 residents per square
     
+    def createInitialResidents(self): # each zone will have its own dictionary of residents
+        size = self.initialResidents()
+        job = ""
+        for i in range(size):
+            if i % 3 ==0:
+                job = "office" # works in office 
+            else:
+                job = "factory" # facotry worker
+            resident = {"resident" : i, "job" : job, "satisfaction" : 50} # intial satisfaction is 50%
+            self.residents.update(resident)
+
 
 class inudstrial(zone):
     def __init__(self, name, cost,type):
@@ -67,8 +81,8 @@ class inudstrial(zone):
         #self.color = (0, 0, 255)
         self.width = 0
         self.height = 0
-        self.factories = []
-        self.employees = [] # change in UML
+        self.factories = {}
+        self.employees = {} # change in UML
         self.max_factories = 0
         self.max_employees = 0
 
@@ -82,9 +96,9 @@ class inudstrial(zone):
         return self.max_employees
 
     def addfactories(self, factories):
-        self.factoriess.append(factories)
+        self.factoriess.update(factories)
     def addEmployee(self, employee):
-        self.employees.append(employee)
+        self.employees.update(employee)
     def removefactories(self, factories):
         self.factoriess.remove(factories)
     def removeEmployee(self, employee):
@@ -101,10 +115,10 @@ class general(zone): #roads, change in UML
         
         self.width = 0
         self.height = 0
-        self.roads = []
+        self.roads = {}
         self.max_roads = 0
         self.max_forests = 0
-        self.forests = []
+        self.forests = {}
         self.police = 0
         self.stadium = 0
     
@@ -117,9 +131,9 @@ class general(zone): #roads, change in UML
     def getMaxForests(self):
         return self.max_forests
     def addRoad(self, road):
-        self.roads.append(road)
+        self.roads.update(road)
     def addForest(self, forest):
-        self.forests.append(forest)
+        self.forests.update(forest)
     def removeRoad(self, road):
         self.roads.remove(road)
     def removeForest(self, forest):
@@ -140,8 +154,8 @@ class service(zone):
         self.stadium = 0
         self.max_police_station = 0
         self.max_stadium = 0
-        self.policeStations = []
-        self.stadiums = []
+        self.policeStations = {}
+        self.stadiums = {}
     
     def setMaxPoliceStation(self, max_police_station):
         self.max_police_station = max_police_station
@@ -152,9 +166,9 @@ class service(zone):
     def getMaxStadium(self):
         return self.max_stadium
     def addPoliceStation(self, policeStation):
-        self.policeStations.append(policeStation)
+        self.policeStations.update(policeStation)
     def addStadium(self, stadium):
-        self.stadiums.append(stadium)
+        self.stadiums.update(stadium)
     def removePoliceStation(self, policeStation):
         self.policeStations.remove(policeStation)
     def removeStadium(self, stadium):
