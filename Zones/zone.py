@@ -40,34 +40,29 @@ class zone:
         return self.name + " " + str(self.x) + " " + str(self.y) + " " + str(self.width) + " " + str(self.height) + " " + str(self.color)
     
 class residential(zone):
-    def __init__(self, name, cost, capacity, saturation, type):
+    def __init__(self, name, cost, type):
         super().__init__(name, cost, capacity, saturation, type)
         #self.color = (0, 255, 0) 
         self.width = 0
         self.height = 0
-        self.houses = []
         self.residents = []
-        self.max_houses = 0
-        self.max_residents = 0
+        self.max_residents =  ((self.width * self.height) / 900) * 4 # max 4 residents per square
 
     
 
     def drawImg(self, screen):
         pass; 
-
-    def addHouse(self, house):
-        self.houses.append(house)
     def addResident(self, resident):
         self.residents.append(resident)
-    def removeHouse(self, house):
-        self.houses.remove(house)
     def removeResident(self, resident):
         self.residents.remove(resident)
-    def getHouses(self):
-        return self.houses
     def getResidents(self):
         return self.residents
+    def initialResidents(self):
+        area = self.width * self.height
+        self.residents = (self.area / 900) * 2 # 2 residents per square
     
+
 class inudstrial(zone):
     def __init__(self, name, cost, capacity, saturation, type):
         super().__init__(name, cost, capacity, saturation, type)
