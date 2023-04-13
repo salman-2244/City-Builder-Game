@@ -2,11 +2,9 @@ import pygame   # import pygame library
 
 
 class zone:
-    def __init__(self, name, cost, capacity, saturation, type):
+    def __init__(self, name, cost, type):
         self.name = name
         self.__cost = cost
-        self.__capacity = capacity
-        self.__saturation = saturation
         self.__type = type
         self.__color = (0, 0, 0)
         self.__x = 0
@@ -41,7 +39,7 @@ class zone:
     
 class residential(zone):
     def __init__(self, name, cost, type):
-        super().__init__(name, cost, capacity, saturation, type)
+        super().__init__(name, cost, type)
         #self.color = (0, 255, 0) 
         self.width = 0
         self.height = 0
@@ -64,8 +62,8 @@ class residential(zone):
     
 
 class inudstrial(zone):
-    def __init__(self, name, cost, capacity, saturation, type):
-        super().__init__(name, cost, capacity, saturation, type)
+    def __init__(self, name, cost,type):
+        super().__init__(name, cost, type)
         #self.color = (0, 0, 255)
         self.width = 0
         self.height = 0
@@ -97,8 +95,8 @@ class inudstrial(zone):
         return self.employees
     
 class general(zone): #roads, change in UML
-    def __init__(self, name, cost, capacity, saturation, type):
-        super().__init__(name, cost, capacity, saturation, type)
+    def __init__(self, name, cost, type):
+        super().__init__(name, cost, type)
         #self.color = (0, 0, 0)
         
         self.width = 0
@@ -133,8 +131,8 @@ class general(zone): #roads, change in UML
     
 #creating the service zone
 class service(zone):
-    def __init__(self, name, cost, capacity, saturation, type):
-        super().__init__(name, cost, capacity, saturation, type)
+    def __init__(self, name, cost, type):
+        super().__init__(name, cost, type)
         #self.color = (255, 0, 0)
         self.width = 0
         self.height = 0
