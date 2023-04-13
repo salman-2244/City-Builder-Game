@@ -55,6 +55,26 @@ class Game:  # initiating game class.
 
          
             
+    def initializeFields(self): # initialize the fields, adding them to fields array 
+        for row in range(3, self.grid_rows): # starting from 3rd row as first 3 rows are for menu
+            for col in range(self.grid_cols):
+                x = col * self.field_size
+                y = row * self.field_size
+                fld = Field(x, y, self.field_size)
+                fld.grid_pos = (row, col)
+                self.fields.append(fld)
+                rect = pg.Rect(x, y, self.field_size, self.field_size)
+               
+    def initialRoad(self):
+        # Change the color of fields in the middle to grey
+        for fld in self.fields:
+            row, col = fld.grid_pos
+            if row == (self.grid_rows)//2 or col == (self.grid_cols)//2:
+                fld.color = (65, 65, 65) # set color to grey for middle field
+                fld.road = True;
+
+         
+            
     def events(self):
         for event in pg.event.get(): # getting all events
             if event.type == pg.QUIT: # if player click exit then exit
@@ -78,8 +98,11 @@ class Game:  # initiating game class.
                         if field.rect.collidepoint(event.pos) and field.selected == False and field.road == False:
                             field.color = (255, 0, 0)
                             field.selected = True;
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> Changes
                      
     def update(self):
         pass;
@@ -108,7 +131,14 @@ class Game:  # initiating game class.
         for y in range(90, self.screen.get_height(), self.field_size): # drawing horizonal lines
            pg.draw.line(self.screen, (255, 255, 255), (0, y), (self.screen.get_width(), y), self.line_width) 
            
+<<<<<<< HEAD
            
+=======
+       
+      
+                         
+                    
+>>>>>>> Changes
     def draw(self):
         self.addBackground()
         for field in self.fields: # this will keep the fields updated
@@ -124,6 +154,7 @@ class Game:  # initiating game class.
         
         
         
+<<<<<<< HEAD
         
         
         
@@ -144,6 +175,27 @@ class Game:  # initiating game class.
         # self.screen
         # while run:
 
+=======
+        image = pg.image.load("/Users/markoboreta/Dropbox/Semester 6/City_builder/Pyton_G/blue-fox/GUI/Buttons/zones.png")
+        clock = pg.time.Clock()
+        #gen_img = pg.image.load("/Users/markoboreta/Dropbox/Semester 6/City_builder/Pyton_G/blue-fox/GUI/Buttons/start.png")
+        self.screen.fill((0, 0, 0)) # fill the screen 
+        # for the zone dropdown menu
+        l1 = list1 = Dropdown(pg.font.SysFont(None, 30), 
+        700, 0, 50, 30,  
+        "Zones", ["General", "Residential", "Commercial", "Industrial"], image)
+        image_build = pg.image.load("/Users/markoboreta/Dropbox/Semester 6/City_builder/Pyton_G/blue-fox/GUI/Buttons/build.png")
+        l2 = list2 = Dropdown(pg.font.SysFont(None, 30), 600, 0, 50, 30, "Build", ["Police", "Forest", "Stadium", "Road"], image_build)
+        run = True
+        self.screen
+        while run:
+
+            self.addBackground()
+            self.drawGrid()
+
+             # drawing the grid
+            #pg.display.flip();  # update the changes in display
+>>>>>>> Changes
             
             # self.timer += 1 # incrementing timer
             # clock.tick(100)

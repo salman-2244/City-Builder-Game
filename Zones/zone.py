@@ -48,9 +48,6 @@ class residential(zone):
         self.residents = {} # dictionary of residents
         self.max_residents =  ((self.width * self.height) / 900) * 4 # max 4 residents per square
 
-
-    
-
     def drawImg(self, screen):
         pass; 
     def addResident(self, resident):

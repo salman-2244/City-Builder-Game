@@ -28,7 +28,7 @@ class World:
                 if(row == 3):
                     self.Fields[row][col] = Field(row * field_size, col * field_size, field_size, pos)
         print(self.Fields[0][0])"""
-        self.Fields = [[ Field(x, y, field_size, pos) for x in range(grid_rows)] for y in range (grid_cols)]
+        self.Fields = [[ Field(x, y, field_size) for x in range(grid_rows)] for y in range (grid_cols)]
         
         # addition of the color in the 2d list for the road in the 3rd row
         print(self.Fields)
@@ -86,6 +86,8 @@ class World:
     
     def get_zones(self):
         return self.Zones
+    
+    
     
         
     
