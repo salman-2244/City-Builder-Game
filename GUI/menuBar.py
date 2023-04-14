@@ -1,4 +1,5 @@
 import pygame as pg
+#import tqdm
 
 class menuBar: # Menu bar at the top of the screen
     def __init__(self, screen, x, y, width, height, color):
@@ -24,3 +25,22 @@ class menuBar: # Menu bar at the top of the screen
             return True
         else:
             return False
+        
+    def addItem(self, item):
+        self.items.append(item)
+    
+    def displayItems(self, screen):
+        self.font = pg.font.SysFont('Arial', 25)
+        for item in self.items:
+            screen.blit(self.font.render(item, True, (255, 255, 255)), (self.x, self.y))
+            self.x += 100 # move the text to the right by 100 pixels
+    
+    """def progressBar(self, screen):
+        for i in tqdm(range(1000)):
+            pass """
+
+
+# Path: GUI/menuBar.py
+
+        
+            

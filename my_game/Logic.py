@@ -68,6 +68,20 @@ class World:
     def get_citizens(self):
         return self.Citizens
     
+    def buy(self, amount):
+        self.Bank -= amount
+    
+    def collectTax(self): # collecting the tax from the citizens
+        for i in self.Zones:
+            if i.getName() == "Residential":
+                for r in i.getResidents(): # iterate over the zones and over the residatial zone dictionary
+                    if r["job"] == "office":
+                        self.Bank += 1000 * self.citizen_tax
+                    else:
+                        self.Bank += 850 * self.citizen_tax
+    def get_bank(self):
+        return self.Bank
+    
     
 
 

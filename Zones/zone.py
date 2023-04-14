@@ -48,6 +48,9 @@ class residential(zone):
         self.residents = {} # dictionary of residents
         self.max_residents =  ((self.width * self.height) / 900) * 4 # max 4 residents per square
 
+    def getName(self):
+        return "Residential"
+
     def drawImg(self, screen):
         pass; 
     def addResident(self, resident):
@@ -81,6 +84,9 @@ class inudstrial(zone):
         self.factories = {}
         self.employees = {} # change in UML
         self.max_employees = 0
+
+    def getName(self):
+        return "Industrial"
 
     def setMaxEmployees(self, max_employees):
         self.max_employees = max_employees
