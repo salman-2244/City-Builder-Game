@@ -2,7 +2,7 @@ import pygame as pg
 
 # from GUI.Dropdown import Dropdown   
 # need to change if put game in other folder.
-from game import Game
+from my_game.game import Game
 # from Logic import World
 # from my_game.game import Game 
 # # need to change if put game in other folder.
@@ -29,7 +29,7 @@ def main():
 
         while playing: # as long as player is playing
            
-            game.run() #running the game
+            #game.run() #running the game
     
 
     

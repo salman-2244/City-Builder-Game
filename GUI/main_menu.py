@@ -8,7 +8,7 @@ class MainMenu():
   pygame.init()
   SCREEN_W = 900
   SCREEN_H = 600
-  bg = pygame.image.load("menu.png")
+  bg = pygame.image.load("./GUI/menu.png")
 
   SCREEN = pygame.display.set_mode((SCREEN_W, SCREEN_H))
   pygame.display.set_caption("Main Menu")
@@ -19,8 +19,8 @@ class MainMenu():
   menu_state = "main"
 
   # load button images
-  start_game = pygame.image.load("Buttons/start.png")
-  instructions = pygame.image.load("Buttons/ini.png")
+  start_game = pygame.image.load("./GUI/Buttons/start.png")
+  instructions = pygame.image.load("./GUI/Buttons/ini.png")
 
   # button instances
   ins_button = Button(365, 300, instructions, 1)
