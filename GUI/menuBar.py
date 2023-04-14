@@ -2,7 +2,7 @@ import pygame as pg
 #import tqdm
 
 class menuBar: # Menu bar at the top of the screen
-    def __init__(self, screen, x, y, width, height, color):
+    def __init__(self, screen, x, y, width, height, color, items):
         self.screen = screen
         self.x = x
         self.y = y
@@ -35,10 +35,15 @@ class menuBar: # Menu bar at the top of the screen
             screen.blit(self.font.render(item, True, (255, 255, 255)), (self.x, self.y))
             self.x += 100 # move the text to the right by 100 pixels
     
+    def updateItems(self, screen, items):
+        self.items = items
+        self.displayItems(screen)
+        
     """def progressBar(self, screen):
         for i in tqdm(range(1000)):
             pass """
 
+    
 
 # Path: GUI/menuBar.py
 
