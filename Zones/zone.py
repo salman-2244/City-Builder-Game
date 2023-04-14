@@ -80,28 +80,16 @@ class inudstrial(zone):
         self.height = 0
         self.factories = {}
         self.employees = {} # change in UML
-        self.max_factories = 0
         self.max_employees = 0
 
-    def setMaxfactories(self, max_factories):
-        self.max_factoriess = max_factories
     def setMaxEmployees(self, max_employees):
         self.max_employees = max_employees
-    def getMaxfactoriess(self):
-        return self.max_factoriess
     def getMaxEmployees(self):
         return self.max_employees
-
-    def addfactories(self, factories):
-        self.factoriess.update(factories)
     def addEmployee(self, employee):
         self.employees.update(employee)
-    def removefactories(self, factories):
-        self.factoriess.remove(factories)
     def removeEmployee(self, employee):
         self.employees.remove(employee)
-    def getfactoriess(self):
-        return self.factoriess
     def getEmployees(self):
         return self.employees
     
