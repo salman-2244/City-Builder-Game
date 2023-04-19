@@ -1,16 +1,9 @@
 import pygame as pg
-
-# from GUI.Dropdown import Dropdown   
-# need to change if put game in other folder.
-from my_game.game import Game
-# from Logic import World
-# from my_game.game import Game 
-# # need to change if put game in other folder.
-# from game import Field 
+from Game import Game
 
 def main():
     
-    running = True # Setting a flag when the game is started
+    running = True # Setting a flag when the game is starte
     playing = True # Setting a flag when the player is playing
 
     pg.init()  # initializing pygame modules
@@ -29,7 +22,7 @@ def main():
 
         while playing: # as long as player is playing
            
-            #game.run() #running the game
+            game.run() #running the game"""
     
 
     

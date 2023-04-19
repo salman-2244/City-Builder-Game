@@ -1,6 +1,6 @@
 import pygame as pg 
 import sys  # importing sys library
-from my_game.game import Game
+from my_game.Game import Game
 from my_game.Field import Field
 from Zones.zone import zone
 

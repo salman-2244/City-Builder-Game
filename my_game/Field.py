@@ -1,8 +1,6 @@
 # from Zones.zone import zone
 import pygame as pg
 class Field:
-    def __init__(self, x, y, size, ):  # (pos) removed one un-necessery parameter 
-        self.x = x 
     def __init__(self, x, y, size):
         self.x = x # in 2d array
         self.y = y
