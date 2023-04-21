@@ -6,7 +6,7 @@ class Field:
         self.y = y
         self.size = size # size of the individual tile
         self.grid_pos = None
-        self.color = (0, 255, 0, 0);
+        self.color = (0, 255, 255);
         self.zone = None  # zone , when selcted change to the zone it is in
         self.zone = None # zone , when selcted change to the zone it is in
         self.road = False  # bool to check if there is a road on the field, if true make the color grey over the background

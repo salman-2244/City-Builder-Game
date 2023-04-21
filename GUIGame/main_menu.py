@@ -1,6 +1,7 @@
 import pygame, sys
 sys.path.append('./GUIGame') 
 from button import Button
+from my_game import main
 
 
 class MainMenu():
@@ -44,7 +45,7 @@ class MainMenu():
       if event.type == pygame.MOUSEBUTTONDOWN:
         if start_button.checkInput(MENU_MOUSE_LOC):
           print("Clicked play")
-          my_game.main.main() # this is where the game starts
+          main.main() # this is where the game starts
         if ins_button.checkInput(MENU_MOUSE_LOC):
           print("Clicked ins")
     pygame.display.update()

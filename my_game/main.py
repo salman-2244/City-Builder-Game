@@ -1,6 +1,8 @@
 import pygame as pg
 from Game import Game
-
+import sys
+sys.path.append('./GUIGame')
+from Dropdown import Dropdown
 def main():
     
     running = True # Setting a flag when the game is starte
@@ -22,7 +24,10 @@ def main():
 
         while playing: # as long as player is playing
            
+            
             game.run() #running the game"""
+            # drawDropdowns(screen) 
+            
     
 
     
