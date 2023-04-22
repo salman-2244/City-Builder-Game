@@ -1,4 +1,5 @@
 import pygame as pg
+from ProgressBar import TextProgress
 #import tqdm
 
 class menuBar: # Menu bar at the top of the screen
@@ -14,9 +15,10 @@ class menuBar: # Menu bar at the top of the screen
              # Citizen count, city name, budget, satisfaction rate and time
 
 
-    def draw(self):
+    def draw(self, content):
         pg.draw.rect(self.screen, self.color, (self.x, self.y, self.width, self.height))
-
+        # how to dispaly content in the rect
+        
     def update(self):
         self.draw()
 
@@ -30,18 +32,24 @@ class menuBar: # Menu bar at the top of the screen
         self.items.append(item)
     
     def displayItems(self, screen):
-        self.font = pg.font.SysFont('Arial', 25)
+        self.font = pg.font.SysFont('Arial', 13)
         for item in self.items:
             screen.blit(self.font.render(item, True, (255, 255, 255)), (self.x, self.y))
             self.x += 100 # move the text to the right by 100 pixels
+            pg.display.update()
+    
+    def createProgressBar(self, screen, x, y, width, height, color, value):
+        bigfont = pg.font.Font(None, 13)
+        white = 255, 255, 255
+        renderer = TextProgress(bigfont, "Satisfaction", white, (40, 40, 40))
+        text = renderer.render(screen, value)
+    
+    
     
     def updateItems(self, screen, items):
         self.items = items
         self.displayItems(screen)
         
-    """def progressBar(self, screen):
-        for i in tqdm(range(1000)):
-            pass """
 
     
 

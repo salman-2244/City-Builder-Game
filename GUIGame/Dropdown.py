@@ -44,11 +44,16 @@ class Dropdown():
 
     def updateDD(self, events):
         # self.killMe = False
+        clickCount = 0
         for event in events:
             if event.type == pg.MOUSEBUTTONDOWN:
                 mouse = pg.mouse.get_pos()
                 self.__menuActive = self.ins_button.checkInput(mouse)
-                self.__activeOption = -1
+                if self.__menuActive:
+                    self.__activeOption = -1
+                    clickCount += 1
+                
+                
                 
         # pass the buttons now insetad of the rects
         if self.__menuActive:
@@ -73,9 +78,10 @@ class Dropdown():
         if not self.__menuActive and self.__activeOption == -1:
             self.__drawMenu = False
         
+        
         for event in events:
             if event.type == pg.MOUSEBUTTONDOWN:
-                if self.__menuActive:
+                if self.__menuActive and self.__activeOption == -1:
                     self.__drawMenu = not self.__drawMenu
                 elif self.__activeOption >= 0 and self.__drawMenu: 
                     self.__drawMenu = False
