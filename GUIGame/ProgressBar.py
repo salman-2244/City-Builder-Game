@@ -48,3 +48,42 @@ class TextProgress:
         surf.set_colorkey(self.notcolor)
         return surf
 
+
+
+entry_info = 'Progress, by Pete Shinners'
+
+#this code will display our work, if the script is run...
+if __name__ == '__main__':
+    import random
+    pygame.init()
+
+    #create our fancy text renderer
+    bigfont = pygame.font.Font(None, 60)
+    white = 255, 255, 255
+    renderer = TextProgress(bigfont, entry_info, white, (40, 40, 40))
+    text = renderer.render(0)
+
+    #create a window the correct size
+    win = pygame.display.set_mode(text.get_size())
+    win.fill((50,100,50), (0, 0, 600, 28))
+    win.blit(text, (0, 0))
+    pygame.display.flip()
+
+    progress = 1;
+
+    #wait for the finish
+    finished = 0
+    while not finished:
+        pygame.time.delay(40)
+        for event in pygame.event.get():
+            if event.type is KEYDOWN and event.key == K_s: #save it
+                name = os.path.splitext(sys.argv[0])[0] + '.bmp'
+                print ('Saving image to:', name)
+                pygame.image.save(win, name)
+            elif event.type in (QUIT,KEYDOWN,MOUSEBUTTONDOWN):
+                finished = 1
+        
+        progress = (progress + random.randint(0,3)) % 120
+        text = renderer.render(progress)
+        win.blit(text, (0, 0))
+#         pygame.display.flip()
