@@ -4,6 +4,7 @@ import sys
 sys.path.append('./my_game')
 from Citizen import Citizen
 import random
+import math
 # from my_game.City import City
 
 
@@ -113,11 +114,6 @@ class residential(zone):
                 else:
                     self.accesible = False 
                 """Test this tmrw"""
-                  
-        
-        
-
-
 class inudstrial(zone):
     def __init__(self, name, cost,type):
         super().__init__(name, cost, type)
@@ -144,25 +140,56 @@ class inudstrial(zone):
         self.employees.remove(employee)
     def getEmployees(self):
         return self.employees
+    def rect_distance( l1, l2):
+        x1 = l1[0]; y1 = l1[1];x1b = l1[2]; y1b = l1[3]
+        x2 = l2[0]; y2 = l2[1];x2b = l2[2]; y2b = l2[3]
+       
+        left = x2b < x1
+        right = x1b < x2
+        bottom = y2b < y1
+        top = y1b < y2
+        if top and left:
+            return math.dist((x1, y1b), (x2b, y2))
+        elif left and bottom:
+            return math.dist((x1, y1), (x2b, y2b))
+        elif bottom and right:
+            return math.dist((x1b, y1), (x2, y2b))
+        elif right and top:
+            return math.dist((x1b, y1b), (x2, y2))
+        elif left:
+            return x1 - x2b
+        elif right:
+            return x2 - x1b
+        elif bottom:
+            return y1 - y2b
+        elif top:
+            return y2 - y1b
+        else:             # rectangles intersect
+            return 0.
     def addWorkers(self, City):
         residential = self.searchForNZones(City, "residenial")
-        
-        
-        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         """Discuss this logic with the team""" 
-        
-        # for zone in City.zones:
-        #     if zone.type == "residential" :
-        #         rands = random.sample(range(), 10)
-        #         for i in len(zone.residents)/2:
-        #             res = random.randint(i, len(zone.residents)/2)
-                    
-        #             if resident.job == "":
-        #                 sal = random.randint(500, 800)
-        #                 resident.job = self.name
-        #                 resident.salary = sal
-        #                 self.employees.append(resident)
-        #                 break
+        for zone in City.zones:
+            if zone.type == "residential" :
+                resX = zone.x
+                resY = zone.y
+                resWidth = zone.width
+                resHeight = zone.height
+                distance = self.rect_distance((self.x, self.y, self.x + self.width, self.y + self.height), (resX, resY, resX + resWidth, resY + resHeight))
+                r = 0;
+                # rands = random.sample(range(), 10)
+                for resident in zone.residents:
+                    r+=1
+                    # res = random.randint(i, len(zone.residents)/2)
+                    if resident.job == "" and resident.salary == 0 and len(self.employees) <= self.max_employees and self.accessible == True:
+                        sal = random.randint(500, 800)
+                        resident.job = self.name
+                        resident.salary = sal
+                        resident.dist_to_work = distance
+                        self.employees.append(resident)
+            else:
+                pass; # do nothing
         
     
 class general(zone): #roads, change in UML
@@ -239,3 +266,25 @@ class service(zone):
         return self.police
     def getStadium(self):
         return self.stadium
+    
+    def addWorkers(self, City):
+        residential = self.searchForNZones(City, "residenial")
+        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        """Discuss this logic with the team""" 
+        # Add the 
+        for zone in City.zones:
+            if zone.type == "residential" :
+                r = 0;
+                # rands = random.sample(range(), 10)
+                for resident in zone.residents:
+                    r+=1
+                    # res = random.randint(i, len(zone.residents)/2)
+                    if resident.job == "" and resident.salary == 0 and len(self.employees) <= self.max_employees:
+                        sal = random.randint(500, 800)
+                        resident.job = self.name
+                        resident.salary = sal
+                        self.employees.append(resident)
+            else:
+                pass; # do nothing
+    
+    

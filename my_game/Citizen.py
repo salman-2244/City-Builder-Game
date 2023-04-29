@@ -11,6 +11,7 @@ class Citizen():
         self.home = home
         # self.work = work
         self.homeCloseToWork = False
+        self.dist_to_work = 0
         
     
     def toDict(self):
