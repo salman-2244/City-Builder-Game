@@ -52,9 +52,6 @@ class Dropdown():
                 if self.__menuActive:
                     self.__activeOption = -1
                     clickCount += 1
-                
-                
-                
         # pass the buttons now insetad of the rects
         if self.__menuActive:
             print("Menu activated\n")

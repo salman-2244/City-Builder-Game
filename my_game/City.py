@@ -8,5 +8,9 @@ class City:
         # self.zones = []
         # self.roads = []
         self.bank = 200000
+        self.zones = []
+    
+    
+        
     
     

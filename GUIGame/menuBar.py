@@ -1,5 +1,7 @@
 import pygame as pg
 from ProgressBar import TextProgress
+import sys
+import datetime
 #import tqdm
 
 class menuBar: # Menu bar at the top of the screen
@@ -28,6 +30,7 @@ class menuBar: # Menu bar at the top of the screen
     def addItem(self, item):
         self.items.append(item)
     
+    
     def displayItems(self, screen, items, value):
         self.font = pg.font.SysFont('Arial', 25)
         for item in items:
@@ -45,7 +48,7 @@ class menuBar: # Menu bar at the top of the screen
         renderer = TextProgress(bigfont, "Satisfaction", white, (40, 40, 40))
         text = renderer.render(screen, value)
 
-        
+    
 
     
 

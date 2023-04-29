@@ -1,17 +1,17 @@
 import pygame as pg  # importing pygame as pg
 from Field import Field
 import sys
-sys.path.append('./GUIGame')  # importing sys library
+sys.path.append('./Zones')  # importing sys library
+sys.path.append('./GUIGame')
 from pygame.locals import *  # So I can use the draw module.
 from Dropdown import Dropdown
 from button import Button
-import time
+from City import City
+from menuBar import menuBar
+import datetime
 import test
-"""from my_game.test import SelectionRect
-import pygame, pygame.surfarray
-from pygame.locals import *
-import numpy, copy"""
-
+from inputBox import InputBox
+from zone import inudstrial, residential, zone
 
 class Game(pg.sprite.Sprite):  # initiating game class.
 
@@ -25,20 +25,41 @@ class Game(pg.sprite.Sprite):  # initiating game class.
         self.line_width = 1  # width of grid lines
         self.fields =  [] # array of field class.
         self.dragging = False  # check if the user is draging or not
+        self.City = City("New York City", 18, 50) # creating a city object 
+        self.zoneChosed = ""
+        self.zoneChosedType = ""
+        self.zoneNo = 0
         self.initializeFields()  # calling initializeFields function
-        self.addBackground()
-
+        # self.addBackground()
+        
+    # function that will create datetime and we will use it on the menu bar
+    def currentTime(self):
+        current_time = datetime.datetime.now()
+        minutes = current_time.minute
+        hour = current_time.hour
+        date = current_time.date() 
+        # print(f"The current date and the time is: {date}: {hour}: {minutes}")
+        return (f"{date}: {hour}: {minutes}")
+        
+    
+    
     def run(self):
         self.playing = True  # untill player is playing it will be true
         self.timer = 0  # starter for timer
         self.addBackground()
+        self.drawInfo(self.screen, 50)
         
         while self.playing:  # while player is playing
+            self.currentTime()
             event_list = pg.event.get()
             
             self.draw(event_list)    
-            self.drawDD(event_list)        
+            self.drawDD(event_list)  
+            self.drawDDBox(event_list)   
+           
+           
             self.clock.tick(60)  # limiting the game loop to a maximum of 60 frames per second
+           
             self.events(event_list)
             
 
@@ -73,7 +94,8 @@ class Game(pg.sprite.Sprite):  # initiating game class.
                      sys.exit();
             elif event.type == pg.MOUSEBUTTONDOWN:
                 if event.button == 1:  # if left mouse button is pressed
-                    self.dragging = True
+                    # self.dragging = True
+                    print(f"pressed on {event.pos}")
                    
             elif event.type == pg.MOUSEBUTTONUP:
                 if event.button == 1:  # if left mouse button is released
@@ -89,32 +111,49 @@ class Game(pg.sprite.Sprite):  # initiating game class.
     def update(self, event_list):
         self.addBackground()
         self.draw(event_list)
+        self.buildZone(event_list)
+        self.drawInfo(self.screen, 50)
+        
 
     # addition of the bacground image
     def addBackground(self):
         bg = pg.image.load("my_game/Assets/bg.jpg")
         bg = pg.transform.scale(bg, (900, 600))
         self.screen.blit(bg, (0, 0))
+        
+
 
     def drawGrid(self):
         for x in range(0, self.screen.get_width(), self.field_size):  # drawing vertical lines
             pg.draw.line(self.screen, (255, 255, 255), (x, 120), (x, self.screen.get_height()),1)
         for y in range(120, self.screen.get_height(), self.field_size):  # drawing horizonal lines
             pg.draw.line(self.screen, (255, 255, 255), (0, y), (self.screen.get_width(), y),1)
-            
+    
+    
+    # draw the info part of the menu in the blue bar
+    def drawInfo(self, screen, value):
+        # --------------------- Info ---------------------------------------
+        date_and_time = self.currentTime()
+        info = [self.City.name, self.City.population, self.City.bank, date_and_time]
+        # font = pg.font.SysFont("comicsansms", 20)
+        mb = menuBar(self.screen, 0, 50, screen.get_width(), screen.get_height(), info)# creating a menu bar object
+        mb.displayItems(screen, info, value) # drawing the menu bars
+
             
     def draw(self, event_list):
-        #self.addBackground()
-        for field in self.fields: # this will keep the fields updated
-            pg.draw.rect(self.screen, field.color, field.rect)
+        pass
+        # #self.addBackground()
+        # for field in self.fields: # this will keep the fields updated
+        #     pg.draw.rect(self.screen, field.color, field.rect)
+        # self.drawGrid()
+        # self.initialRoad()
+        
 
-        self.drawGrid()
-        self.initialRoad()
         
         
-        pg.display.flip()
-        # pg.quit()
-        # exit()
+        # pg.display.flip()
+        # # pg.quit()
+        # # exit()
 
     """This function is used to draw the dropdown menu for the zones.
             - event_list: list of events
@@ -129,15 +168,12 @@ class Game(pg.sprite.Sprite):  # initiating game class.
                 # --------------------- Zones list ---------------------------------------
         image = pg.image.load("./GUIGame/Buttons/zones.png")
         imgSize = (image.get_width(), image.get_height())
-        # ins_button = Button(700, 0, image, 1)
-        # ins_button.update(self.screen)
-        # if ins_button.isClicked(event_list):
-        #     test.main(self.screen)
-        # if test.ZONE[0] == "General":
-        #     print("General selected")
-            
+
         
-        # # creating button instancess 
+        #---------------------
+        ret = ""
+        #---------------------
+        
         ini = pg.image.load("./GUIGame/Buttons/General.png");ini = pg.transform.scale(ini, imgSize)
         general = Button(0, 0, ini, 1);general.setText("General")
         comm = pg.image.load("./GUIGame/Buttons/Commercial.png");comm = pg.transform.scale(comm, imgSize)
@@ -150,19 +186,29 @@ class Game(pg.sprite.Sprite):  # initiating game class.
         # for the zone dropdown menu
         list1 = Dropdown(pg.font.SysFont(None, 30),700, 0, 50, 30,"Zones", [general, commercial, industrial, residential], image)
         selected_option = list1.updateDD(event_list)
+        
         if selected_option >= 0:
             if selected_option == 0:
                 print("General")
+                ret = "General"
                 # selection on click herre 
                 # code your selection here !!!!!!! 
+                
             elif selected_option == 1:
                 print("Commercial")
+                self.zoneChosed = "Commercial"
+                self.update(event_list)
             elif selected_option == 2:
                 print("Industrial")
+                self.zoneChosed = "Industrial"
+                self.update(event_list)
             elif selected_option == 3:
                 print("Residential")
+                self.zoneChosed = "Residential"
+                self.update(event_list)
             else:
                 print("No option selected")
+                self.zoneChosed = ""
             list1.main = list1.options[selected_option]
         s1 = selected_option
         list1.drawDD(self.screen)
@@ -180,37 +226,111 @@ class Game(pg.sprite.Sprite):  # initiating game class.
         list2 = Dropdown(pg.font.SysFont(None, 30), 600, 0, 50, 30, "Build",
                                [police, stadium, roadBut, forBut], image_build)
         selected_option2 = list2.updateDD(event_list)
+        print(selected_option2)
         if selected_option2 >= 0:
             if selected_option2 == 0:
                 print("Police")
+                self.zoneChosedType  = "Police"
                 self.update(event_list)
             elif selected_option2 == 1:
                 print("Stadium")
+                self.zoneChosedType  = "Stadium"
+                self.update(event_list)
             elif selected_option2 == 2:
                 print("Road")
+                self.zoneChosedType  = "Road"
+                self.update(event_list)
             elif selected_option2 == 3:
                 print("Forest")
+                self.zoneChosedType  = "Forest"
+                self.update(event_list)
             else:
                 print("No option selected")
+                self.zoneChosedType  = ""
             list2.main = list2.options[selected_option2]
         list2.drawDD(self.screen)
         
         pg.display.flip()
-        
-            
+        return ret
 
+    
+    
+    # def selectZone(self):
+        
+    
+    
+    
     
     
     """This function is used to draw the initial road and grid but cleaned up the code"""
 
+    def drawDDBox(self, event_list):
+        image = pg.image.load("./GUIGame/Buttons/zones.png")
+        imgSize = (image.get_width(), image.get_height())
+        ins_button = Button(20, 0, image, 1)
+        ins_button.update(self.screen)
+        input_box1 = InputBox(100, 200, 100, 100)
+        # input_box2 = InputBox(20, 40, 75, 60)
+        input_boxes = [input_box1]
+        RED = (255, 0, 0)
+        rect_x = 20
+        rect_y = 30
+        rect_width = 90
+        rect_height = 80
+        text1 = ""
+        text2 = ""
+        clicked = 0
+        
+        if ins_button.isClicked(event_list):
+            clicked += 1
+            # pg.draw.rect(self.screen, RED, [rect_x, rect_y, rect_width, rect_height])
+            for box in input_boxes:
+                    print("Here2")
+                    if clicked == 1:
+                        box.handle_event(event_list)
+                    
+            for box in input_boxes:
+                box.update()
+                print("Active: ", box.active)
+                print("here 3")
+            text1 = input_box1.text
+            # text2 = input_box2.text
+            if text1 != "" or text2 != "" and  event.type == pg.KEYDOWN:
+                if pg.KEYDOWN == pg.K_RETURN:
+                    print("text1: ", text1)
+                    # print("text2: ", text2)
+                    # self.update(event_list)
+            for box in input_boxes:
+                box.draw(self.screen)
 
-       
-
-
-
-
-
-
-
-
-
+            pg.display.flip()
+            
+            
+    def buildZone(self, event_list):
+        
+        if self.zoneChosed == "Residential":
+            self.zoneNo += 1
+            zone = residential("res",0,self.zoneNo)
+            zone.x = 0
+            zone.y = 100
+            zone.width = 300
+            zone.height = 300
+            # zone.initialResidents()
+            zone.createInitialResidents(self.City)
+            print('Residents no:', self.City.population)
+            for i in (zone.residents):
+                print(i.id)
+            # self.update(event_list)
+        if self.zoneChosed == "Industrial":
+            self.zoneNo += 1
+            zone = inudstrial("Indstrial",0,self.zoneNo)
+            zone.x = 300
+            zone.y = 100
+            zone.width = 300
+            zone.height = 300
+            zone.setMaxEmployees() # max employeees of the zone
+            self.City.zones.append(zone)
+            
+            
+            
+            # self.update(event_list)

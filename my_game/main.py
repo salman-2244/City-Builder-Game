@@ -15,18 +15,14 @@ def main():
     
 
     game = Game(screen, clock)   # calling game class
-    # world = World()
-    # world.init_fields(screen)
-    #world.draw_roads(screen)
-
+    
     while running: # as long as game is running 
         
 
         while playing: # as long as player is playing
            
             
-            game.run() #running the game"""
-            # drawDropdowns(screen) 
+            game.run() # calling run function from game class
             
     
 
@@ -34,10 +30,3 @@ def main():
 
 if __name__ == "__main__":   # default : Checks if main is not imported 
     main()
-    
-        
-    
-    # adding the logic of the game to the screen        
-    
-    # pg.quit()
-    # exit()
