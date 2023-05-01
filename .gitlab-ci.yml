@@ -1,3 +1,21 @@
-Job1:
+stages:
+    - build
+    - test
+    - deploy
+
+build Job:
+    stage: build
     script:
-       - echo "This is the first demo job"
+       - echo "This is the first build job"
+    
+test Job:
+    stage: test
+    script:
+       - echo "This is the first test job"
+
+deploy Job:
+    stage: deploy
+    script:
+       - echo "This is the first deploy job"
+
+
