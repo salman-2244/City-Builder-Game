@@ -6,7 +6,9 @@ stages:
 build Job:
     stage: build
     script:
-       - echo "This is the first build job"
+        - mkdir -p build
+        - cd build && cmake ..
+        - cd build && make
     
 test Job:
     stage: test
@@ -16,6 +18,6 @@ test Job:
 deploy Job:
     stage: deploy
     script:
-       - echo "This is the first deploy job"
+        - scp -r -P 2222 build/git@szofttech.inf.elte.hu:software-technology-2023/group-2/blue-fox.git:/home/user/deployed_game
 
 
