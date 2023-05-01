@@ -106,6 +106,8 @@ class Police(Building):
             return self.__publicSaftey
         def get_radius(self):
             return self.__radius
+        def moreHappy(self): # increase the happiness of the residents
+            pass
         
    
    # stadium class
@@ -116,38 +118,42 @@ class Stadium(Building):
             self.__radius = 2 # 2x2 tiles
             self.__bonus = 5 # bonus for the happiness of the residents
             # maybe not needed DISCUSS! self.revenue = 0 # revenue from the stadium at the beggining
-        def build(self, window):
-            window.blit(self.picture, (self.__x, self.__y))
+        
+        
+        def build(self, window, zone):
+            if zone.get_type() == "general":
+                window.blit(self.picture, (self.__x, self.__y))
+            # window.blit(self.picture, (self.__x, self.__y))
         def get_radius(self):
             return self.__radius
         def get_bonus(self):
             return self.__bonus
     
-class Forest(Building):
-        def __init__(self, name, x, y, width, height, location, cost):
-            super().__init__(name, x, y, width, height, location, cost)
-            self.__picture = pygame.image.load("forest.png")
-            self.__radius = 3 # 3x3 tiles at the beggining, we will make it grow year by year
-            self.__age = 0 # age of the forest at the beggining
-            self.__maintainance = 20 # maintainance fee for the forest, PER MONTH
-        def build(self, window):
-            window.blit(self.picture, (self.__x, self.__y))
-        def get_radius(self):
-            return self.__radius
-        def get_age(self):
-            return self.__age
-        def get_maintainance(self):
-            return self.__maintainance
-        def grow(self): # grows by year, not by trees
-            self.__radius += 1
-            self.__maintainance += 10
-            if self.__age < 10:
-                self.__age += 1
-            elif self.__age >= 10:
-                pass
-        def calculate_maintnance(self):
-            self.__maintainance *= 10 
-        def get_maintainance(self):
-            return self.__maintainance
+# class Forest(Building):
+#         def __init__(self, name, x, y, width, height, location, cost):
+#             super().__init__(name, x, y, width, height, location, cost)
+#             self.__picture = pygame.image.load("forest.png")
+#             self.__radius = 3 # 3x3 tiles at the beggining, we will make it grow year by year
+#             self.__age = 0 # age of the forest at the beggining
+#             self.__maintainance = 20 # maintainance fee for the forest, PER MONTH
+#         def build(self, window):
+#             window.blit(self.picture, (self.__x, self.__y))
+#         def get_radius(self):
+#             return self.__radius
+#         def get_age(self):
+#             return self.__age
+#         def get_maintainance(self):
+#             return self.__maintainance
+#         def grow(self): # grows by year, not by trees
+#             self.__radius += 1
+#             self.__maintainance += 10
+#             if self.__age < 10:
+#                 self.__age += 1
+#             elif self.__age >= 10:
+#                 pass
+#         def calculate_maintnance(self):
+#             self.__maintainance *= 10 
+#         def get_maintainance(self):
+#             return self.__maintainance
     
             

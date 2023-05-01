@@ -20,7 +20,7 @@ class zone:
         self.height = 0
         self.accessible = False # if the zone is accessible to the road, set this in function
     
-    def searchForNZones(self, City, type):
+    def searchForZones(self, City, type): # search for zones of a type
         cands = []
         for cand in City.zones:
             if cand.type == type and cand.accessible == True:
@@ -32,7 +32,6 @@ class zone:
             return cands
        
             
-    
     def setXY(self, x, y):
         self.x = x
         self.y = y
@@ -68,6 +67,16 @@ class residential(zone):
         self.max_residents =  ((self.width * self.height) / 900) * 4 # max 4 residents per square
         self.no = no # number of the zone, used for saving and loading, ege Res1, Res2, Res3, etc.
         self.type = "residential"
+        self.accesible = False
+        self.constructed = False
+        self.time_elapsed_since_last_action = 0
+        
+        
+    def isRoad(self, City):
+        for road in City.roads:
+            if road.x in range(self.x+100, self.x + self.width+100) and road.y in range(self.y+100, self.y + self.height+100):
+                self.accesible = True
+                return True        
 
     def getName(self):
         return "Residential"
@@ -102,21 +111,48 @@ class residential(zone):
         tax = City.tax # tax rate
         for resident in self.residents:
             City.bank += resident.salary * (tax / 100)
+            
     def countResidents(self):
         return len(self.residents)
     # how to check whether the zone is accessible to the road
+    
     def isAcessible(self, city_tiles):
         if self.accesible == False:
             #find the residential zone in the city tiles
             for c in city_tiles:
                 if (c.x in range(self.x + 50, (self.x + self.width + 50)) and c.y in range(self.y + 50, (self.y + self.height + 50))) or (c.x in range(self.x - 50, (self.x + self.width - 50)) and c.y in range(self.y - 50, (self.y + self.height - 50))) or (c.x in range(self.x + 50, (self.x + self.width + 50)) and c.y in range(self.y - 50, (self.y + self.height - 50))) or (c.x in range(self.x - 50, (self.x + self.width - 50)) and c.y in range(self.y + 50, (self.y + self.height + 50))) and c.type == "road": # if the zone is next to the road 
+                    # change this for type !!!!!!!!!!
                         self.accesible = True
                 else:
                     self.accesible = False 
                 """Test this tmrw"""
+                
+    def moveOutAndIn(self, City):
+        pass
+            # self.time_elapsed_since_last_action = 0
+            # clock = pygame.time.Clock()
+            # dt = clock.tick() 
+            # self.time_elapsed_since_last_action += dt
+            # if len(self.residents) > 10:
+            #     for i in range(10):
+            #         rand = random.randint(0, len(self.residents)-1)
+            #         if self.residents[rand] != None:
+            #             del(self.residents[rand])
+                       
+            #             print("Resident moved out")
+            
+            #     if self.time_elapsed_since_last_action > 1000: #after ten secodns
+            #         for i in range (8):
+            #             id = len(self.residents) + i
+            #             resident = Citizen(id, "", 0, 50,self.no,)
+            #             self.residents.append(resident)
+            #             print("Resident moved in")
+            # City.population += 8 - 10   
+                
+                
 class inudstrial(zone):
-    def __init__(self, name, cost,type):
-        super().__init__(name, cost, type)
+    def __init__(self, name, cost,num):
+        super().__init__(name, cost)
         #self.color = (0, 0, 255)
         self.width = 0
         self.height = 0
@@ -124,7 +160,9 @@ class inudstrial(zone):
         self.employees = [] # change in UML
         self.max_employees = 0
         self.type = "industrial"
-
+        self.num = num
+        self.constructed = False
+        self.accessible = False
     def getName(self):
         return "Industrial"
 
@@ -140,7 +178,7 @@ class inudstrial(zone):
         self.employees.remove(employee)
     def getEmployees(self):
         return self.employees
-    def rect_distance( l1, l2):
+    def rect_distance( self,l1, l2):
         x1 = l1[0]; y1 = l1[1];x1b = l1[2]; y1b = l1[3]
         x2 = l2[0]; y2 = l2[1];x2b = l2[2]; y2b = l2[3]
        
@@ -167,29 +205,38 @@ class inudstrial(zone):
         else:             # rectangles intersect
             return 0.
     def addWorkers(self, City):
-        residential = self.searchForNZones(City, "residenial")
+        residential = self.searchForZones(City, "residential")
                 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         """Discuss this logic with the team""" 
         for zone in City.zones:
             if zone.type == "residential" :
+                # print("here 1")
                 resX = zone.x
                 resY = zone.y
                 resWidth = zone.width
                 resHeight = zone.height
                 distance = self.rect_distance((self.x, self.y, self.x + self.width, self.y + self.height), (resX, resY, resX + resWidth, resY + resHeight))
+                print("distance: " + str(distance))
                 r = 0;
                 # rands = random.sample(range(), 10)
                 for resident in zone.residents:
                     r+=1
                     # res = random.randint(i, len(zone.residents)/2)
-                    if resident.job == "" and resident.salary == 0 and len(self.employees) <= self.max_employees and self.accessible == True:
+                    
+                    if resident.workZone == "" and resident.salary == 0 and len(self.employees) <= self.max_employees:
+                        # print("here 2" )
                         sal = random.randint(500, 800)
                         resident.job = self.name
                         resident.salary = sal
                         resident.dist_to_work = distance
                         self.employees.append(resident)
+                        print(f"work: {resident.job } salary: {resident.salary} len: {len(self.employees)} max: {self.max_employees}")
             else:
+                print("No more workers needed")
                 pass; # do nothing
+        for emp in self.employees:
+            print(emp.job + " " + str(emp.id)+ "employed at " + self.name)
+    
         
     
 class general(zone): #roads, change in UML
@@ -206,6 +253,7 @@ class general(zone): #roads, change in UML
         self.police = 0
         self.stadium = 0
         self.type = "general"
+        self.constructed = False
     
     def getMaxForests(self):
         return self.max_forests
@@ -224,8 +272,8 @@ class general(zone): #roads, change in UML
     
 #creating the service zone
 class service(zone):
-    def __init__(self, name, cost, type):
-        super().__init__(name, cost, type)
+    def __init__(self, name, cost, num):
+        super().__init__(name, cost)
         #self.color = (255, 0, 0)
         self.width = 0
         self.height = 0
@@ -236,6 +284,8 @@ class service(zone):
         self.policeStations = []
         self.stadiums = []
         self.type = "service"
+        self.num = num
+        self.constructed = False
     
     def setMaxPoliceStation(self, max_police_station):
         self.max_police_station = max_police_station
@@ -284,7 +334,10 @@ class service(zone):
                         resident.job = self.name
                         resident.salary = sal
                         self.employees.append(resident)
+       
             else:
                 pass; # do nothing
+            for emp in self.employees:
+                print(emp.job + " " + emp.name+ "employed at " + self.name)
     
     
