@@ -1,5 +1,5 @@
 
-image: python:latest
+image: python:python:2.7.18
 
 
 variables:
@@ -16,35 +16,16 @@ before_script:
   - virtualenv venv
   - source venv/bin/activate
 
+build:
+    script:
+        - mkdir -p build
+
 test:
   script:
-    - python setup.py test
-    - pip install tox flake8  # you can also use tox
-    - tox -e py36,flake8
+        - python -m unittest discover -s unit_tests -p "*_test.py"
 
-run:
-  script:
-    - python setup.py bdist_wheel
-    # an alternative approach is to install and run:
-    - pip install dist/*
-    # run the command here
-  artifacts:
-    paths:
-      - dist/*.whl
-
-pages:
-  script:
-    - pip install sphinx sphinx-rtd-theme
-    - cd doc
-    - make html
-    - mv build/html/ ../public/
-  artifacts:
-    paths:
-      - public
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
 deploy:
   stage: deploy
-  script: echo "Define your deployment script!"
+  script: scp -r -P 2222 build/git@szofttech.inf.elte.hu:software-technology-2023/group-2/blue-fox.git:/home/user/deployed_game
   environment: production
