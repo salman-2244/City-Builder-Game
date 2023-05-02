@@ -22,7 +22,7 @@ build:
 
 test:
   script:
-        - python -m unittest discover -s UnitTests -p "*_test.py"
+        - python -m unittest discover -s UnitTest -p "*_test.py"
 
 
 deploy:
