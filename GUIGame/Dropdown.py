@@ -40,48 +40,80 @@ class Dropdown():
             self.kill()
         
         
-        
-
     def updateDD(self, events):
-        # self.killMe = False
-        clickCount = 0
-        for event in events:
-            if event.type == pg.MOUSEBUTTONDOWN:
-                mouse = pg.mouse.get_pos()
-                self.__menuActive = self.ins_button.checkInput(mouse)
-                if self.__menuActive:
-                    self.__activeOption = -1
-                    clickCount += 1
-        # pass the buttons now insetad of the rects
-        if self.__menuActive:
-            print("Menu activated\n")
-            print(self.clickCount)
-            self.clickCount += 1
-        # checking from the options
         for i in range(len(self.options)):
             rect = self.ins_button.getRect().copy()
             self.options[i].rect = rect
             self.options[i].rect = rect.move(0, (i+ 1) * rect.height)
 
-            # have a rect of the button and then check if the mouse is in the rect
-            if self.options[i].isClicked(events):
-                self.__activeOption = i
-                self.__menuActive = True
-                print(self.__activeOption)
-                self.clickCount += 1
-                print("Option chosen: %d",self.__activeOption)
-                # self.killMe = True
-                return self.__activeOption
-        if not self.__menuActive and self.__activeOption == -1:
-            self.__drawMenu = False
-        
-        
         for event in events:
             if event.type == pg.MOUSEBUTTONDOWN:
-                if self.__menuActive and self.__activeOption == -1:
-                    self.__drawMenu = not self.__drawMenu
-                elif self.__activeOption >= 0 and self.__drawMenu: 
-                    self.__drawMenu = False
+                mouse = pg.mouse.get_pos()
+                self.__menuActive = self.ins_button.checkInput(mouse)
+                self.__activeOption = -1
+                
+            if self.__menuActive:
+                print("Menu activated\n")
+                self.clickCount += 1
+
+            for i in range(len(self.options)):
+                if self.options[i].isClicked(events):
+                    self.__activeOption = i
+                    self.__menuActive = True
+                    print(self.__activeOption)
+                    print("jjk")
+                    self.clickCount += 1
+                    print("Option chosen: %d",self.__activeOption)
+                    self.killMe = True
                     return self.__activeOption
+                    
+            if not self.__menuActive and self.__activeOption == -1:
+                self.__drawMenu = False
+                
+            if self.__menuActive:
+                self.__drawMenu = not self.__drawMenu
+            elif self.__activeOption >= 0 and self.__drawMenu: 
+                self.__drawMenu = False
+                return self.__activeOption
         return -1
+
+
+    # def updateDD(self, events):
+    #     for event in events:
+    #         if event.type == pg.MOUSEBUTTONDOWN:
+    #             mouse = pg.mouse.get_pos()
+    #             self.__menuActive = self.ins_button.checkInput(mouse)
+    #             self.__activeOption = -1
+                
+    #     # pass the buttons now insetad of the rects
+    #     if self.__menuActive:
+    #         print("Menu activated\n")
+    #         self.clickCount += 1
+    #     # checking from the options
+    #     for i in range(len(self.options)):
+    #         rect = self.ins_button.getRect().copy()
+    #         self.options[i].rect = rect
+    #         self.options[i].rect = rect.move(0, (i+ 1) * rect.height)
+
+    #         # have a rect of the button and then check if the mouse is in the rect
+    #         if self.options[i].isClicked(events):
+    #             self.__activeOption = i
+    #             self.__menuActive = True
+    #             print(self.__activeOption)
+    #             print("jjk")
+    #             self.clickCount += 1
+    #             print("Option chosen: %d",self.__activeOption)
+    #             self.killMe = True
+    #             return self.__activeOption
+    #     if not self.__menuActive and self.__activeOption == -1:
+    #         self.__drawMenu = False
+        
+    #     for event in events:
+    #         if event.type == pg.MOUSEBUTTONDOWN:
+    #             if self.__menuActive:
+    #                 self.__drawMenu = not self.__drawMenu
+    #             elif self.__activeOption >= 0 and self.__drawMenu: 
+    #                 self.__drawMenu = False
+    #                 return self.__activeOption
+    #     return -1
 

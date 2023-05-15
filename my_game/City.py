@@ -9,7 +9,9 @@ class City:
         # self.citizens = []
         # self.zones = []
         # self.roads = []
-        
+        self.polCnt = 0
+        self.StadCnt = 0
+        self.roadCnt = 0
         self.bank = 200000
         self.zones = []
         self.roads = []
@@ -33,24 +35,17 @@ class City:
                 break
     
     def maintnanceFee(self):
-        for road in self.roads:
-            self.bank -=1
+        roadCnt = len(self.roads)
+        
+        self.bank -= roadCnt
             # print("road maintnance fee")
         
-        for zone in self.zones:
-            if zone.type == "general":
-                if zone.police:
-                    self.bank -= 10
-                    # print("police maintnance fee")
-                elif zone.stadium:
-                    self.bank -= 10
-                elif zone.stadium and zone.police:
-                    self.bank -= 20
-                    # print("stadium and police maintnance fee")
-                else:
-                    pass
-                    # print("no maintnance fee other than road")
-                
+        if self.polCnt > 0:
+            self.bank -= 100
+            print("police maintnance fee")
+        if self.StadCnt > 0:
+            self.bank -= 200
+            print("stadium maintnance fee")    
                     
     def randMove(self, citizen):
         ran = random.randint(0, 1)
@@ -81,21 +76,21 @@ class City:
                     
     
     def employPeriodically(self):
-        # print("Checking for employment >>>")
+        print("Checking for employment >>>")
         for zone in self.zones:
-            if zone.type == "general":
+            if zone.typ == "general":
                if zone.police or zone.stadium:
                    zone.addWorkers(self)
-            elif zone.type == "industrial":
+            elif zone.typ == "industrial":
                 zone.addWorkers(self)
-            elif zone.type == "service":
+            elif zone.typ == "service":
                 zone.addWorkers(self)
                 
     def periodicalHappy(self):
         sum = 0
         cnt = 0
         for zone in self.zones:
-            if zone.type == "residential":
+            if zone.typ == "residential":
                 cnt += 1
                 sum += zone.getHapiness()
         if cnt == 0:
@@ -107,19 +102,19 @@ class City:
         cnt = 0
         
         for zone in self.zones:
-            if zone.type == "residential":
+            if zone.typ == "residential":
                 cnt+=1
                 zone.getTaxes(self)
             if cnt == 0:
                 pass
     def checkResidentialConnection(self, fields):
         for zone in self.zones:
-            if zone.type == "residential":
+            if zone.typ == "residential":
                 zone.checkConnetcions(self,fields)
                 
     def moveInAndOut(self):
         for zone in self.zones:
-            if zone.type == "residential":
+            if zone.typ == "residential":
                 if self.happiness < 50:
                     zone.moveOut(self)
                     zone.moveOut(self)
@@ -132,7 +127,12 @@ class City:
                     else:
                         zone.moveIn(self)
                         zone.moveIn(self)
-                    zone.moveOut(self)                   
+                    zone.moveOut(self)
+    def changeZones(self,toChng, change):
+        for zone in self.zones:
+            if (zone.x == toChng.x and zone.y == toChng.y) and (change.x == toChng.x and change.y == toChng.y):
+                zone = change
+                break                 
                 
                 
             

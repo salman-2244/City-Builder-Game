@@ -6,7 +6,7 @@ class Field:
         self.y = y
         self.size = size # size of the individual tile
         self.grid_pos = None
-        self.color = (86, 148, 70,0);
+        self.color = (86, 148, 70);
         self.building = "";
         self.zone = None # zone , when selcted change to the zone it is in
         self.road = False  # bool to check if there is a road on the field, if true make the color grey over the background
@@ -21,6 +21,41 @@ class Field:
         if self.road == True:
             reachables = [(self.x, self.y+55), (self.x, self.y-55), (self.x+55, self.y), (self.x-55, self.y)]
             return reachables
+    
+    def destructible(self, fields):
+        cond1 = True; cond2 = True; cond3 = True; cond4 = True;
+        unzoned = True
+         
+        if self.road == True and self.zone.typ == "general":
+            for field in fields:
+                if( self.y + 50 ==  field.y and field.x == self.x and field.road == True):
+                    cond1 = False
+                if(self.y + 50 ==  field.y and field.x == self.x and field.zone.typ != "general"):
+                    unzoned = False
+                if (self.y - 50 ==  field.y and field.x == self.x and field.road == True):
+                    cond2 = False
+                if( self.y - 50 ==  field.y and field.x == self.x and field.zone.typ != "general"):
+                    unzoned = False
+                if (self.x + 50 ==  field.x and field.y == self.y and field.road == True):
+                    cond3 = False
+                if( self.x + 50 ==  field.x and field.y == self.y and field.zone.typ != "general"):
+                    unzoned = False
+                
+                if (self.x -50 ==  field.x and field.y == self.y and field.road == True):
+                    cond4 = False
+                if( self.x - 50 ==  field.x and field.y == self.y and field.zone.typ != "general"):
+                    unzoned = False
+            if unzoned == False:
+                return False
+            if cond1 == True and cond2 == True and cond3 == True and cond4 == True:
+                return True
+            elif cond1 == False and cond2 == False:
+                return False
+            elif cond3 == False and cond4 == False:
+                return False
+            
+            # else :
+            #     return True
     
     def set_zone(self, zone):
         self.zone = zone

@@ -1,8 +1,7 @@
 import pygame, sys
 sys.path.append('./GUIGame') 
-sys.path.append('./my_game')
 from button import Button
-from main import main
+from my_game import main
 
 
 class MainMenu():
