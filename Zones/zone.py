@@ -359,17 +359,16 @@ class general(Zone): #roads, change in UML
         self.max_police_station = 0
         self.max_stadium = 0
         self.policeStations = []
+        self.employees = []
         self.stadiums = []
-        self.maxWoker = 0
+        self.max_employees = 0
         self.road = False
         
         
-    def setMaxWorker(self ):
-        if self.name != "Road" or self.name != "Forest":
-            if self.police == True or self.stadium == True:
-                self.maxWorker = 100
-            elif self.police == True and self.stadium == True:
-                self.maxWorker = 150
+    def setMaxEmployees(self):
+        area = self.width * self.height
+        emp = area / 250
+        self.max_employees = emp * 3 # 3 employees per square
     
     def demolishBuidlding(self, City):
         for zone in City.zones:
@@ -483,6 +482,7 @@ class general(Zone): #roads, change in UML
     
     
     def addWorkers(self, City):
+        self.setMaxEmployees()
         if self.police == True or self.stadium == True: 
             for zone in City.zones:
                 if zone.typ == "residential" and zone.accesible == True:
