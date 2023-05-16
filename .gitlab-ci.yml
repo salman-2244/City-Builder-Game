@@ -25,7 +25,7 @@ test:
         - python -m unittest discover -s UnitTest -p "*_test.py"
 
 
-deploy:
-  stage: deploy
-  script: scp -r -P 2222 build/git@szofttech.inf.elte.hu:software-technology-2023/group-2/blue-fox.git:/home/user/deployed_game
-  environment: production
+# deploy:
+#   stage: deploy
+#   script: scp -r -P 2222 build/git@szofttech.inf.elte.hu:software-technology-2023/group-2/blue-fox.git:/home/user/deployed_game
+#   environment: production
