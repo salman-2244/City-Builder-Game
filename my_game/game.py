@@ -1,176 +1,496 @@
+import tkinter as tk
+import pyautogui
+from tkinter import *
+from tkinter import messagebox
 import pygame as pg  # importing pygame as pg
 from Field import Field
 import sys
-sys.path.append('./Zones')  # importing sys library
-sys.path.append('./GUIGame')
-from pygame.locals import *  # So I can use the draw module.
+sys.path.append('./GUIGame')  # importing sys library
+sys.path.append('./Zones')
+from pygame.locals import *  # So I can use the diff modules.
 from Dropdown import Dropdown
+from Zone import Zone
+from button import Button
 from button import Button
 from City import City
 from menuBar import menuBar
-import datetime
-import test
-from inputBox import InputBox
-from zone import inudstrial, residential, zone
+import time
+from datetime import datetime, timedelta, timedelta
+# from inputBox import InputBox
+from Zone import general, inudstrial, residential, service, Zone
+import time
+import pygame.freetype
+import random
 
-class Game(pg.sprite.Sprite):  # initiating game class.
+
+class Game():  # initiating game class.
 
     def __init__(self, screen, clock):
-        super().__init__()
         self.screen = screen  # setting screen object to screen
         self.clock = clock  # setting clock object
-        self.field_size = 30  # size of each field
+        self.field_size = 50  # size of each field
+        self.font = pg.font.SysFont(None, 24)
         self.grid_rows = int(screen.get_height() / self.field_size)  # calculate rows (use later)
+        self.zoneNo = 0
+        self.City = City("New York City", 18, 50)
         self.grid_cols = int(screen.get_width() / self.field_size)  # calculate cols
         self.line_width = 1  # width of grid lines
         self.fields =  [] # array of field class.
-        self.dragging = False  # check if the user is draging or not
-        self.City = City("New York City", 18, 50) # creating a city object 
-        self.zoneChosed = ""
-        self.zoneChosedType = ""
-        self.zoneNo = 0
         self.initializeFields()  # calling initializeFields function
-        self.time_elapsed = pg.time.get_ticks()
+        # self.addBackground() 
+        # self.initialRoad()
         self.speed = 1
-        # self.addBackground()
+        self.numbers = 0
+        self.selectedBuilding = ""
+        self.zoneChosed = ""
+        self.isSelectedBuilding = False;
+        self.clicks = 0
+        self.square_indices = []
+        self.now = datetime.now()
+        self.minutes = self.now.minute
+        self.hour = self.now.hour
+        self.date = self.now.date()
+        self.seconds = 0
+
         
         
-    def setImg(self, police_pos, img):
+    def run(self):
+        self.playing = True  # untill player is playing it will be true
+        self.timer = 0  # starter for timer  
+        self.addBackground()
+        # self.initialRoad()
+        # self.draw() # we will delete it later
+        while self.playing:  # while player is playing
+            event_list = pg.event.get()
+            self.draw() # we will delete it later
+            self.timer += 1
+            # self.facTree()
+            self.checkExplosions()
+            self.drawDD(event_list)   
+            self.clock.tick(60)  # limiting the game loop to a maximum of 60 frames per second
+            self.events(event_list)
+            
+            self.City.taxMoney()
+            if self.timer % 10 == 0:
+                self.City.maintnanceFee() # deducting the maintnance fee from the bank every 3 min 
+                self.City.employPeriodically()
+                # self.City.periodicalHappy()
+                self.City.periodicalTax()
+            
+            self.checkZones()
+            self.City.moveInAndOut()
+            
+            if self.zoneChosed == "Comemrcial" or self.zoneChosed == "Industrial":
+                self.City.checkResidentialConnection(self.fields)
+            self.drawInfo(self.screen, 50)
+            # self.update()
+    
+    
+    
+    
+    
+    def show_explosion(self):
+            images = []
+            for num in range(1, 6):
+                img = pygame.image.load(f"my_game/Assets/img/exp{num}.png")
+                img = pygame.transform.scale(img, (200, 200))
+                images.append(img)
+            index = 0
+            counter = 0
+            explosion_time = 6000
+            start_time = pygame.time.get_ticks()
+            x = random.randint(0, 900 - 100)
+            y = random.randint(150, 600 - 100)
+            while pygame.time.get_ticks() - start_time < explosion_time:
+
+                self.clock.tick(60)
+                self.draw()
+                #update explosion animation
+                counter += 1
+                if counter >= 4:
+                    counter = 0
+                    index += 1
+                    if index >= len(images):
+                        break
+
+                # draw current frame of explosion
+                self.screen.blit(images[index], (x, y))
+                pygame.display.update()
+    
+    
+    
+    def checkExplosions(self):
+        matcher = 69
+        randu = random.randint(0, 2000)
+        if randu == matcher:
+            num = 0
+            explosion_duration = 6000
+            spawn_time = pygame.time.get_ticks()  # initialize timer
+            explosion_end_time = spawn_time + explosion_duration  # calculate when explosions should stop
+            while num < 5:
+                current_time = pygame.time.get_ticks()
+                if current_time - spawn_time > 1000 and current_time < explosion_end_time:
+                    self.show_explosion()  # spawn explosion
+                    spawn_time = current_time  # reset timer
+                    print(num)
+                    num+=1
+            
+
+        
+    
+    # very very useful for for testing purposes
+    def pDetails(self, police_pos):
+         for field in self.fields: # this will keep the fields updated
+            if (field.rect.collidepoint(police_pos)):
+                print("I am Printing the details of the clicked field")
+                print(field.building)
+                print(field.road)
+                print(field.zone.typ)
+                print(field.zone)
+                
+                
+     # to demolish roads   
+    def roadDel(self, police_pos):
+            # You can add the bank logic here.
+        for field in self.fields: # this will keep the fields updated
+            if (field.road and field.rect.collidepoint(police_pos)):
+                print("hi from delete Road")
+                field.road = False
+                field.color =  (86, 148, 70);
+                pg.draw.rect(self.screen, field.color, field.rect)     
+        
+        # DO NOT DELETE
+        
+    def reclassify(self, police_pos):
+        # You can add the bank logic here.
+        for field in self.fields: # this will keep the fields updated
+            if (field.zone != "general" and field.rect.collidepoint(police_pos)):
+                print("hi from reclassify")
+                pg.draw.rect(self.screen, field.color, field.rect) 
+        #         
+    def removeBigImg(self, pos):
+        building = "abc"                                                                         
+        for i, fld in enumerate(self.fields):
+            if fld.rect.collidepoint(pos) and fld.road == True:
+                self.roadDel(pos)
+                break;
+            if fld.rect.collidepoint(pos) and fld.building != "" and fld.road == False:
+                # Remove the stadium image from the screen
+                building = fld.building 
+                print(building)
+                 
+            for field in self.fields: # this will keep the fields updated
+                #(field.building.startswith("stadium") or field.building.startswith("police"))
+                if (field.zone.typ == "general" and  field.building == building):
+                    # print(field.building)
+                    # print(building)
+                    field.building = ""
+        
+    
+    # Set images on one field.
+    def setImg(self, police_pos, img, option):
         police_img = pg.image.load(img)
         newSize = (50, 50)
         scaled_image = pg.transform.scale(police_img, newSize)
         print(police_pos)
         for i, fld in enumerate(self.fields):
-            if fld.rect.collidepoint(police_pos) and fld.building == "":
-                fld.building = "house";
+            if fld.rect.collidepoint(police_pos) and fld.building == "" and fld.road == False:
+                fld.building = option;
                 police_rect = scaled_image.get_rect()
                 police_rect.center = fld.rect.center
                 self.screen.blit(scaled_image, police_rect)
                 # Draw border around the field
                 border_rect = pg.Rect(fld.rect.topleft, (self.field_size, self.field_size))
                 pg.draw.rect(self.screen, (255, 0, 0), border_rect, 3)
+                
+
         pg.display.flip()
+        self.selectedBuilding = ""
+        self.clicks = 0
+    
+
+    def drawZone(self, police_pos, img, zone):
+        police_img = pg.image.load(img)
+        newSize = (50, 50)
+        self.zoneChosed = ""
+        scaled_image = pg.transform.scale(police_img, newSize)
+        print(police_pos)
+        for i, fld in enumerate(self.fields):
+            if fld.rect.collidepoint(police_pos) and fld.building == "" and fld.road == False:
+                fld.building = img;
+                fld.zone = zone
+                police_rect = scaled_image.get_rect()
+                police_rect.center = fld.rect.center
+                self.screen.blit(scaled_image, police_rect)
+                # Draw border around the field
+                border_rect = pg.Rect(fld.rect.topleft, (self.field_size, self.field_size))
+                pg.draw.rect(self.screen, (255, 0, 0), border_rect, 3)
+                if zone == "Residential":
+                    classZone = residential(zone, 100, (fld.x*10)+fld.y)
+                    classZone.x = fld.x; classZone.y = fld.y; classZone.width = 50; classZone.height = 50;
+                    city = self.City
+                    classZone.createInitialResidents(self.City); 
+                    classZone.deductPrice(self.City)
+                    classZone.accesible = classZone.isRoad(city);
+                    fld.zone = classZone
+                    self.City.zones.append(fld.zone)
+                    # classZone.deductPrice(self.City)
+                    print(f"class zone x and y {classZone.x} and {classZone.y} is road {classZone.accesible}")
+                    
+                    fld.zone = classZone
+                if zone == service:
+                    classZone = service(zone, 100, (fld.x*10)+fld.y)
+                    classZone.x = fld.x; classZone.y = fld.y; classZone.width = 50; classZone.height = 50;
+                    city = self.City
+                    print(f"Roads size {len(self.City.roads)}")
+                    classZone.accesible = classZone.isRoad(city);
+                    classZone.addWorkers(self.City)
+                    fld.zone = classZone
+                    self.City.zones.append(fld.zone)
+                    # classZone.deductPrice(self.City)
+                    print(f"class zone x and y {classZone.x} and {classZone.y} is road {classZone.accesible}")
+                if zone == inudstrial:
+                    classZone = inudstrial(zone, 100, (fld.x*10)+fld.y)
+                    classZone.x = fld.x; classZone.y = fld.y; classZone.width = 50; classZone.height = 50;
+                    city = self.City
+                    print(f"Roads size {len(self.City.roads)}")
+                    classZone.accesible = classZone.isRoad(city);
+                    classZone.satsifaction(self.City)
+                    classZone.addWorkers(self.City)
+                    fld.zone = classZone
+                    self.City.zones.append(fld.zone)
+                    # classZone.deductPrice(self.City)
+                    print(f"class zone x and y {classZone.x} and {classZone.y} is road {classZone.accesible}")
+            
+                    fld.zone = classZone
+                pg.display.flip()
+
+    
+    def facTree(self):
+        for i, fld in enumerate(self.fields):
+                if i == 2:  
+                    self.setImg((130,150), "my_game/Assets/tree.png", "forest")
+                if i == 22:
+                    self.setImg((130,200), "my_game/Assets/tree.png", "forest")
+                if i == 3:  
+                    self.setImg((180,150), "my_game/Assets/tree.png", "forest")
+                if i == 23:
+                    self.setImg((180,200), "my_game/Assets/tree.png", "forest")
+                if i == 40:
+                    self.setImg((810,400), "my_game/Assets/tree.png", "forest")
+                if i == 41:
+                    self.setImg((810,460), "my_game/Assets/tree.png", "forest")
+                if i == 42:
+                        self.setImg((860,400), "my_game/Assets/tree.png", "forest")
+                if i == 43:
+                    self.setImg((860,460), "my_game/Assets/tree.png", "forest")
+                     
+                    
+                    
+                
+
+    def checkZones(self):
+        for z in self.City.zones:
+            if z.isRoad(self.City):
+                z.accesible = True
+
+    def currentTime(self, speed):
+       
         
+        if speed == 1:
+                self.seconds += 1
+                if self.seconds >= 60:
+                    self.minutes += 1
+                    if(self.minutes == 60):
+                        self.hour += 1
+                        if(self.hour == 24):
+                            self.hour = 0
+                            self.minutes = 0
+                            self.seconds = 0
+                            self.date += timedelta(days=1)
+                            # print(f"{hour}:{minutes}:{seconds}")
+        if speed == 2:
+                self.seconds += 2
+                if self.seconds >= 60:
+                    self.minutes += 1
+                    if(self.minutes == 60):
+                        self.hour += 1
+                        if(self.hour == 24):
+                            self.hour = 0
+                            self.minutes = 0
+                            self.seconds = 0
+                            self.date += timedelta(days=1)
+                            # print(f"{hour}:{minutes}:{seconds}")
+        if speed == 3:
+                self.seconds += 50
+                if self.seconds >= 60:
+                    self.minutes += 1
+                    self.seconds = 0
+                    if(self.minutes >= 60):
+                        self.hour += 1
+                        self.minutes = 0 
+                        if(self.hour == 24):
+                            self.hour = 0
+                            self.minutes = 0
+                            self.seconds = 0
+                            self.date += timedelta(days=1)
+        return(f"{self.date} {self.hour}:{self.minutes}:{self.seconds}")
+     
+     
+    def drawInfo(self, screen, value ):  
+        info = []
+        hapiness = 0
+        cnt = 0
+        if self.City.population > 0:
+            happiness = self.City.happiness
+            for zone in self.City.zones:
+                if zone.name == "res":
+                    cnt += 1
+                    happiness += zone.getHapiness()
+                if cnt > 0:
+                    happiness = happiness / cnt
+        else:
+            happiness = 50
+        if happiness > 100:
+            happiness = 100
+            
+             # --------------------- Info ---------------------------------------
+        time = self.currentTime(1)
+        info = [self.City.name, self.City.population, self.City.bank, time,happiness]
+        font = pygame.freetype.SysFont("Arial", 20)
+        # mb = menuBar(self.screen, 0, 40, screen.get_width(), 60, info)# creating a menu bar object
+        # mb.displayItems(screen, info, (255,255,255) )
+        # color = (0,0,204)
+        # pg.draw.rect(screen, color, pg.Rect(0, 40, screen.get_width(),60))
+        # # pg.display.update()
         
-    def setBigImg(self, police_pos, img):
+        # mb.displayItems(screen, info, (255,255,255) ) # drawing the menu bars
+        
+        score = self.font.render(f"Date: {time} Population: {self.City.population} Satisfaction: {self.City.happiness}, Bank: {round(self.City.bank)}$",True ,(255, 255, 255))
+        txt_rect = score.get_rect(x = 10, y = 55)
+        pg.draw.rect(self.screen, (0,0,255), txt_rect)
+
+        screen.blit(score, txt_rect)
+        
+        # print("Happiness is, ",happiness )
+        # print("Population is, ",self.City.population)
+        # print("Bank is, ",self.City.bank )
+    
+    
+    
+    
+    # Set images on 2x2 fields.
+    def setBigImg(self, police_pos, img, option):
         # Get the indices of the fields in the 2x2 square
+        self.numbers+=1
+        temp = True
         square_indices = []
         for i, fld in enumerate(self.fields):
-            if fld.rect.collidepoint(police_pos):
+            if fld.rect.collidepoint(police_pos) and fld.road == False and fld.building == "":
                 if (i % self.grid_cols < self.grid_cols - 1) and (i // self.grid_cols < self.grid_rows - 1):
                     if fld.building != "":
-                        print("Cannot oveerlap Stadium")
-                        prompt_message = "Enter your name: "
-                        prompt_text = self.font.render(prompt_message, True, (255, 255, 255))
-                        prompt_rect = prompt_text.get_rect(center=(300, 500))
-                        self.screen.blit(prompt_text, prompt_rect)
+                        print("Cannot overlap ")
                         pg.display.update()
                         break
                         
                     square_indices.extend([i, i+1, i+self.grid_cols, i+self.grid_cols+1])
-                    
+                   
+                    # for g in self.square_indices:
+                    #     print(g)
                     break
-    
+        for i, fld in enumerate(self.fields):
+                if i in square_indices and fld.road:
+                    temp = False
+                    break;
     # Draw a border around the fields in the 2x2 square
-            if square_indices:
-                top_left = self.fields[square_indices[0]].rect.topleft
-                bottom_right = self.fields[square_indices[-1]].rect.bottomright
-                border_rect = pg.Rect(top_left, (bottom_right[0]-top_left[0], bottom_right[1]-top_left[1]))
-                pg.draw.rect(self.screen, (250, 100, 100), border_rect, 2)
-                # print(square_indices[0]);
-                # Load and draw the image in the center of the square
-                police_img = pg.image.load(img)
-                scaled_image = pg.transform.scale(police_img, (self.field_size*2, self.field_size*2))
-                image_rect = scaled_image.get_rect(center=border_rect.center)
-                self.screen.blit(scaled_image, image_rect)
-                
-                for i, fld in enumerate(self.fields):
-                    if i in square_indices:
-                        fld.building = "stadium"
-                    print(fld.building);         
-                pg.display.flip()
+        if square_indices and temp:
+            top_left = self.fields[square_indices[0]].rect.topleft
+            bottom_right = self.fields[square_indices[-1]].rect.bottomright
+            border_rect = pg.Rect(top_left, (bottom_right[0]-top_left[0], bottom_right[1]-top_left[1]))
+            pg.draw.rect(self.screen, (250, 100, 100), border_rect, 2)
+            police_img = pg.image.load(img)
+            scaled_image = pg.transform.scale(police_img, (self.field_size*2, self.field_size*2))
+            image_rect = scaled_image.get_rect(center=border_rect.center)
+            self.screen.blit(scaled_image, image_rect)
+            self.selectedBuilding = ""
+
+            for i, fld in enumerate(self.fields):
+                if i in square_indices:
+                    fld.building = option + str(self.numbers)
+                    print(fld.building);       
+            pg.display.flip()
+
+
 
     
-    
+    # set the Road
     def setRoad(self, police_pos):
+        cnt=0;
         print(police_pos)
         for i, fld in enumerate(self.fields):
             if fld.rect.collidepoint(police_pos):
                 fld.color = (65, 65, 65)
-                print(fld.color);
-                print("inside loop")
-        pg.display.flip()   
+                fld.road = True;
+                cnt += 1
+                zone = general("general",0, cnt)
+                zone.x = fld.x
+                zone.y = fld.y
+                zone.width = 50
+                zone.height = 50
+                zone.road = TRUE
+                self.City.roads.append(zone)
+                fld.zone = zone
+        # pg.display.flip()
+        # self.update()   
         
         
-    # function that will create datetime and we will use it on the menu bar
-    def currentTime(self):
-        current_time = datetime.datetime.now()
-        minutes = current_time.minute 
-        hour = current_time.hour
-        date = current_time.date()
-        # print(f"The current date and the time is: {date}: {hour}: {minutes}")
-        
-        # font = pg.font.SysFont('Arial', 8)
-        # text = (f"Time elapsed: {self.time_elapsed}")
-        
-        # screen.blit(text, (0, 40))
-        return (f"{date}: {hour}: {minutes}")
-        # return text
+
     
-        
-        
-    
-    
-    def run(self):
-        self.playing = True  # untill player is playing it will be true
-        self.timer = 0  # starter for timer
-        self.addBackground()
-        self.drawInfo(self.screen, 50)
-        time = 60
-        if self.speed == 1:
-            time = 60
-        elif self.speed == 2:
-            time = 40
-        elif self.speed == 3:
-            time = 20
-            
-        
-        while self.playing:  # while player is playing
-            self.currentTime()
-            event_list = pg.event.get()
-            self.draw(event_list)    
-            self.drawDD(event_list)  
-            # self.drawDDBox(event_list)
-            self.clock.tick(time)  # limiting the game loop to a maximum of 60 frames per second
-            
-            for zone in self.City.zones:
-                if zone.type == "residential":
-                    # zone.moveOutAndIn(self.City)
-                    pass
-            self.events(event_list)
-            self.update(event_list)
+
             
             
 
     def initializeFields(self):  # initialize the fields, adding them to fields array
-         for row in range(4, self.grid_rows): # starting from 3rd row as first 3 rows are for menu
+         for row in range(2, self.grid_rows): # starting from 3rd row as first 3 rows are for menu
             for col in range(self.grid_cols):
                 x = col * self.field_size
                 y = row * self.field_size
                 fld = Field(x, y, self.field_size)
                 fld.grid_pos = (row, col)
+                zone = general("general",0, 0)
+                zone.x = fld.x
+                zone.y = fld.y
+                fld.zone = zone
+                fld.id = (row*10)+col
+                zone.width = 50
+                zone.height = 50
                 self.fields.append(fld)
-                print(len(self.fields))
-                rect = pg.Rect(x, y, self.field_size, self.field_size)
                 
 
     def initialRoad(self):
+        cnt = 0
         # Change the color of fields in the middle to grey
         for fld in self.fields:
+            cnt+=1;
             row, col = fld.grid_pos
             if row == (self.grid_rows) // 2 or col == (self.grid_cols) // 2:
                 fld.color = (65, 65, 65)  # set color to grey for middle field
                 fld.road = True;
+                # print("inside initial road")
+                # Comment for Clearity
+                
+                zone = general("general",0, cnt)
+                zone.road = True
+                fld.zone = zone
+                zone.x = fld.x
+                zone.y = fld.y
+                zone.width = 50
+                zone.height = 50
+                zone.road = True
+                self.City.zones.append(zone)
+                self.City.roads.append(zone)
+        self.update()
+                
 
     def events(self, event_list):
         
@@ -185,112 +505,106 @@ class Game(pg.sprite.Sprite):  # initiating game class.
                      pg.quit();
                      sys.exit();
             elif event.type == pg.MOUSEBUTTONDOWN:
-                # if(self.isSelecteBuilding):
-                # print("Mouse button down event fired")   
-                police_pos = event.pos
-                # self.setBigImg(police_pos, "my_game/Assets/stadium.png")
-                # self.mess()
-                self.setRoad(police_pos)
-                    # self.setRoad(police_pos);
-            #     mouse_pos = pg.mouse.get_pos()
-            #     for i, fld in enumerate(self.fields):
-            #         if fld.rect.collidepoint(mouse_pos):
-            #             print("Clicked on field", i)
-            #             self.click_count+=1;
-            #     if event.button == 1:  # if left mouse button is pressed
-            #         self.dragging = True
+             
+               
+                      police_pos = event.pos
+                      print(police_pos);
+                      if event.button == 1:  # if left mouse button is press
+                            
+                            self.clicks +=1;
+                            print("from events menu")
+                            # self.pDetails(police_pos)
+
+                            print(self.clicks)
+                            if (self.selectedBuilding != "" and self.clicks == 2):
+                                if (self.selectedBuilding == "police"):
+                                    print("Inside  police events")
+                                    self.setBigImg(police_pos, "my_game/Assets/police.png", "police")
+                                elif(self.selectedBuilding == "road"): 
+                                    self.setRoad(police_pos)
+                                elif(self.selectedBuilding == "stadium"):
+                                    self.setBigImg(police_pos, "my_game/Assets/stadium.png", "stadium")
+                                elif (self.selectedBuilding == "forest"):
+                                    self.setImg(police_pos, "my_game/Assets/tree.png", "forest")
+                                elif (self.selectedBuilding == "reclassify"):
+                                    self.reclassify(police_pos)
+                                elif (self.selectedBuilding == "demolish"):
+                                    # for field in self.fields:
+                                    #     print((field.zone.typ))
+                                        # print((field.building))
+                                    self.removeBigImg(police_pos)
+                            
+                            if(self.zoneChosed != "" and self.clicks == 2):
+                                if(self.zoneChosed == "Residential"):
+                                    self.drawZone(police_pos, "my_game/Assets/house.png", residential)
+                                elif(self.zoneChosed == "Commercial"):
+                                    self.drawZone(police_pos, "my_game/Assets/police.png", service)
+                                elif(self.zoneChosed == "Industrial"):
+                                    self.drawZone(police_pos, "my_game/Assets/factory.png", inudstrial)
+                                else:
+                                    print("No zone choosed") 
+                        
+        #             self.dragging = True
                    
-            # elif event.type == pg.MOUSEBUTTONUP:
-            #     if event.button == 1:  # if left mouse button is released
-            #         self.dragging = False
-            # elif event.type == pg.MOUSEMOTION:
-            #     if self.dragging:  # if left mouse button is held down and mouse is moving
+        #     elif event.type == pg.MOUSEBUTTONUP:
+        #         if event.button == 1:  # if left mouse button is released
+        #             self.dragging = False
+        #     elif event.type == pg.MOUSEMOTION:
+        #         if self.dragging:  # if left mouse button is held down and mouse is moving
 
-            #         for field in self.fields:
-            #             # and field.road == False
-            #              if field.rect.collidepoint(event.pos) and field.selected == False :
-            #                 field.color = (255, 0, 0)
-            #                 field.selected = True;
-            #         pg.display.flip()
+        #             for field in self.fields:
+        #                 if field.rect.collidepoint(event.pos):
+                            
+        #                     if not field.selected:
+        #                     # mark the field as selected and change its color
+        #                         field.selected = True
+        #                         # field.color = (0, 140, 120)
+        # # create a border around the selected field
+        #                     # if field.selected:
+        #                     #     field_border = pg.Rect(field.rect.x - 2, field.rect.y - 2, field.rect.width + 4, field.rect.height + 4)
+        #                     #     pg.draw.rect(self.screen, (0, 0, 255), field_border, 8)
+                                
 
-    def update(self, event_list):
-        # self.addBackground()
-        self.draw(event_list)
-        self.buildZone(event_list)
-        self.drawInfo(self.screen, 50)
-        
+
+                    
+
+   
+                                  
+    #and field.zone != None
+    def update(self):
+        for field in self.fields: # this will keep the fields updated
+            # and  field.zone.typ == "general"
+            if (field.building == "" and  field.zone.typ == "general"):
+                pg.draw.rect(self.screen, field.color, field.rect)
+        # pg.display.flip()
 
     # addition of the bacground image
     def addBackground(self):
-        bg = pg.image.load("my_game/Assets/bg.jpg")
+        bg = pg.image.load("my_game/Assets/bg1.jpg")
         bg = pg.transform.scale(bg, (900, 600))
         self.screen.blit(bg, (0, 0))
-        
-
 
     def drawGrid(self):
         for x in range(0, self.screen.get_width(), self.field_size):  # drawing vertical lines
-            pg.draw.line(self.screen, (255, 255, 255), (x, 120), (x, self.screen.get_height()),1)
-        for y in range(120, self.screen.get_height(), self.field_size):  # drawing horizonal lines
+            pg.draw.line(self.screen, (255, 255, 255), (x, 100), (x, self.screen.get_height()),1)
+        for y in range(100, self.screen.get_height(), self.field_size):  # drawing horizonal lines
             pg.draw.line(self.screen, (255, 255, 255), (0, y), (self.screen.get_width(), y),1)
-    
-    
-    # draw the info part of the menu in the blue bar
-    def drawInfo(self, screen, value):
-        
-        happiness = 50
-        if self.City.population > 0:
-            for zone in self.City.zones:
-                if zone.name == "residential":
-                    for resident in zone.residents:
-                        happiness+= self.resident.happy
-            happiness = round((happiness / self.City.population) * 100)
-            happiness = str(happiness)+"%"
-        
-                    
-                
-        # --------------------- Info ---------------------------------------
-        date_and_time = self.currentTime()
-        info = [self.City.name, self.City.population, self.City.bank, date_and_time, happiness]
-        # font = pg.font.SysFont("comicsansms", 20)
-        mb = menuBar(self.screen, 0, 50, screen.get_width(), screen.get_height(), info)# creating a menu bar object
-        mb.displayItems(screen, info, value, ) # drawing the menu bars
-
             
-    def draw(self, event_list):
-        pass
-        #self.addBackground()
-        for field in self.fields: # this will keep the fields updated
-            pg.draw.rect(self.screen, field.color, field.rect)
-        self.drawGrid()
+            
+    def draw(self):
         self.initialRoad()
-        
-
-        
-        
+        self.drawGrid()
         pg.display.flip()
-        # pg.quit()
-        # exit()
+        
+      
 
-    """This function is used to draw the dropdown menu for the zones.
-            - event_list: list of events
-            it doesnt want to recall back after the first time it is called
-            if u know how to fix it please do so
-            I tried to kill sprite but it didnt work
-            
-    """
     
     
     def drawDD(self, event_list):
                 # --------------------- Zones list ---------------------------------------
         image = pg.image.load("./GUIGame/Buttons/zones.png")
-        imgSize = (image.get_width(), image.get_height())
-
-        
-        #---------------------
-        ret = ""
-        #---------------------
-        
+        imgSize = (image.get_width(), image.get_height())    
+        # # creating button instancess 
         ini = pg.image.load("./GUIGame/Buttons/General.png");ini = pg.transform.scale(ini, imgSize)
         general = Button(0, 0, ini, 1);general.setText("General")
         comm = pg.image.load("./GUIGame/Buttons/Commercial.png");comm = pg.transform.scale(comm, imgSize)
@@ -303,29 +617,41 @@ class Game(pg.sprite.Sprite):  # initiating game class.
         # for the zone dropdown menu
         list1 = Dropdown(pg.font.SysFont(None, 30),700, 0, 50, 30,"Zones", [general, commercial, industrial, residential], image)
         selected_option = list1.updateDD(event_list)
-        
         if selected_option >= 0:
             if selected_option == 0:
                 print("General")
-                ret = "General"
-                # selection on click herre 
-                # code your selection here !!!!!!! 
+                # pyautogui.prompt(text='', title='Enter Amout of Tax' , default='')
+                # self.selectedBuilding = "reclassify"
+                self.selectedBuilding = "demolish"
+                self.clicks =0;
+                
+                # COMMENT THIS PART IF YOU DO NOT WANT TO DO EXPLOSIONS 
+                num = 0
+                explosion_duration = 6000
+                spawn_time = pygame.time.get_ticks()  # initialize timer
+                explosion_end_time = spawn_time + explosion_duration  # calculate when explosions should stop
+                while num < 5:
+                    current_time = pygame.time.get_ticks()
+                    if current_time - spawn_time > 1000 and current_time < explosion_end_time:
+                        self.show_explosion()  # spawn explosion
+                        spawn_time = current_time  # reset timer
+                        print(num)
+                        num+=1
                 
             elif selected_option == 1:
-                print("Commercial")
                 self.zoneChosed = "Commercial"
-                self.update(event_list)
+                pyautogui.alert(" Commercial Zone is Selected")
+                self.clicks =0;
             elif selected_option == 2:
-                print("Industrial")
                 self.zoneChosed = "Industrial"
-                self.update(event_list)
+                pyautogui.alert(" Industrial Zone is Selected")
+                self.clicks =0;
             elif selected_option == 3:
-                print("Residential")
-                self.zoneChosed = "Residential"
-                self.update(event_list)
+               pyautogui.alert(" Residential Zone is Selected")
+               self.zoneChosed = "Residential"
+               self.clicks =0;
             else:
                 print("No option selected")
-                self.zoneChosed = ""
             list1.main = list1.options[selected_option]
         s1 = selected_option
         list1.drawDD(self.screen)
@@ -333,127 +659,132 @@ class Game(pg.sprite.Sprite):  # initiating game class.
         # ------------------------------- Build list -------------------------------------
         forest = pg.image.load("./GUIGame/Buttons/Forest.png");forest = pg.transform.scale(forest, imgSize)
         forBut = Button(0, 0, forest, 1);forBut.setText("Forest")
-        pol = pg.image.load("./GUIGame/Buttons/Police.png");pol = pg.transform.scale(pol, imgSize)
+        pol = pg.image.load("./GUIGame/Buttons/police.png");pol = pg.transform.scale(pol, imgSize)
         police = Button(0, 0, pol, 1);police.setText("Police")
         stad = pg.image.load("./GUIGame/Buttons/stad.png");stad = pg.transform.scale(stad, imgSize)
         stadium = Button(0, 0, stad, 1);stadium.setText("Stadium")
-        road = pg.image.load("./GUIGame/Buttons/Road.png");road = pg.transform.scale(road, imgSize)
+        road = pg.image.load("./GUIGame/Buttons/road.png");road = pg.transform.scale(road, imgSize)
         roadBut = Button(0, 0, road, 1);roadBut.setText("Road")
         image_build = pg.image.load("./GUIGame/Buttons/build.png")
         list2 = Dropdown(pg.font.SysFont(None, 30), 600, 0, 50, 30, "Build",
                                [police, stadium, roadBut, forBut], image_build)
         selected_option2 = list2.updateDD(event_list)
-        print(selected_option2)
+        # print(selected_option2);
+        
         if selected_option2 >= 0:
-            if selected_option2 == 0:
-                print("Police")
-                self.zoneChosedType  = "Police"
-                self.update(event_list)
+            if selected_option2 == 0:  
+                pyautogui.alert("Police is Selected")
+                self.selectedBuilding = "police"
+                self.clicks =0;
+                # pyautogui.prompt(text='', title='Enter Amout of Tax' , default='')
+
             elif selected_option2 == 1:
-                print("Stadium")
-                self.zoneChosedType  = "Stadium"
-                self.update(event_list)
+                pyautogui.alert(" Stadium is Selected")
+                self.selectedBuilding = "stadium"
+                self.clicks = 0
             elif selected_option2 == 2:
-                print("Road")
-                self.zoneChosedType  = "Road"
-                self.update(event_list)
+               pyautogui.alert(" Road is Selected")
+               self.selectedBuilding = "road"
+               self.clicks = 0
             elif selected_option2 == 3:
-                print("Forest")
-                self.zoneChosedType  = "Forest"
-                self.update(event_list)
+                pyautogui.alert(" Forest is Selected")
+                self.selectedBuilding = "forest"
+                self.clicks =0;
             else:
                 print("No option selected")
-                self.zoneChosedType  = ""
             list2.main = list2.options[selected_option2]
         list2.drawDD(self.screen)
-        
+                  
         pg.display.flip()
-        return ret
-
-    
-    
-    # def selectZone(self):
         
-    
-    
-    
-    
-    
-    """This function is used to draw the initial road and grid but cleaned up the code"""
-
-    # def drawDDBox(self, event_list):
-    #     image = pg.image.load("./GUIGame/Buttons/zones.png")
-    #     imgSize = (image.get_width(), image.get_height())
-    #     ins_button = Button(20, 0, image, 1)
-    #     ins_button.update(self.screen)
-    #     input_box1 = InputBox(100, 200, 100, 100)
-    #     # input_box2 = InputBox(20, 40, 75, 60)
-    #     input_boxes = [input_box1]
-    #     RED = (255, 0, 0)
-    #     rect_x = 20
-    #     rect_y = 30
-    #     rect_width = 90
-    #     rect_height = 80
-    #     text1 = ""
-    #     text2 = ""
-    #     clicked = 0
         
-    #     if ins_button.isClicked(event_list):
-    #         clicked += 1
-    #         # pg.draw.rect(self.screen, RED, [rect_x, rect_y, rect_width, rect_height])
-    #         for box in input_boxes:
-    #                 print("Here2")
-    #                 if clicked == 1:
-    #                     box.handle_event(event_list)
-                    
-    #         for box in input_boxes:
-    #             box.update()
-    #             print("Active: ", box.active)
-    #             print("here 3")
-    #         text1 = input_box1.text
-    #         # text2 = input_box2.text
-    #         if text1 != "" or text2 != "" and  event.type == pg.KEYDOWN:
-    #             if pg.KEYDOWN == pg.K_RETURN:
-    #                 print("text1: ", text1)
-    #                 # print("text2: ", text2)
-    #                 # self.update(event_list)
-    #         for box in input_boxes:
-    #             box.draw(self.screen)
+    # Explosion Class
+    ##############################################################
+    
+    
+    
 
-    #         pg.display.flip()
-            
-            
-    def buildZone(self, event_list):
-        print(self.City.population)
-        if self.zoneChosed == "Residential":
-            self.zoneNo += 1
-            zone = residential("res",0,self.zoneNo)
-            zone.x = 0
-            zone.y = 100
-            zone.width = 300
-            zone.height = 300
-            # zone.initialResidents()
-            zone.createInitialResidents(self.City)
-            print('Residents no:', self.City.population)
-            for i in range (len(zone.residents)):
-                print(zone.residents[i].workZone)
-            # self.update(event_list)
-            
-        if self.zoneChosed == "Industrial":
-            self.zoneNo += 1
-            zone = inudstrial("Indstrial",0,self.zoneNo)
-            zone.x = 300
-            zone.y = 100
-            zone.width = 300
-            zone.height = 300
-            zone.setMaxEmployees() # max employeees of the zone
-            self.City.zones.append(zone)
-            zone.addWorkers(self.City)
-            print(zone.max_employees)
-            print(zone.name + " " + str(zone.num))
-            
-            
-            
-            
-            
-            # self.update(event_list)
+
+    
+        
+    # Some Other functions that can be used later
+    #####################################################################################################
+        
+    #     def mess(self):
+    #         # Initialize Pygame
+    #         pg.init()
+
+    #     # Create a new Pygame display for the message box
+    #     message_width = 320
+    #     message_height = 240
+    #     message_screen = pg.display.set_mode((message_width, message_height))
+    #     pg.display.set_caption("Message Box")
+
+    #     # Show the message box using the tkinter messagebox module
+    #     messagebox.showinfo("Title", "This is a message box.")
+
+    #     # Clear the message screen and update the display
+    #     message_screen.fill((0, 0, 0))
+    #     pg.display.update()
+
+    #     # Wait for the user to dismiss the message box
+    #     running = True
+    #     while running:
+    #         for event in pg.event.get():
+    #             if event.type == pg.QUIT:
+    #                 running = False
+
+    #     # Close the Pygame display for the message box
+    #     pg.quit()
+    
+    # def setCursor(self,img):
+        
+    #     pg.mouse.set_visible(False)
+    #     police_img = pg.image.load(img).convert_alpha()
+    #     newSize = (50,50)
+    #     scaled_image = pg.transform.scale(police_img, newSize)
+    #     self.cursor_img = scaled_image
+
+    
+    
+    
+    #  def selection(self, event_list):
+    #         for event in event_list:
+    #         if event.button == 1:  # if left mouse button is pressed
+    #                 self.dragging = True
+                   
+    #         elif event.type == pg.MOUSEBUTTONUP:
+    #             if event.button == 1:  # if left mouse button is released
+    #                 self.dragging = False
+    #         elif event.type == pg.MOUSEMOTION:
+    #             if self.dragging:  # if left mouse button is held down and mouse is moving
+
+    #                 for field in self.fields:
+    #                     if field.rect.collidepoint(event.pos):
+                            
+    #                         if not field.selected:
+    #                         # mark the field as selected and change its color
+    #                             field.selected = True
+    #                             # field.color = (0, 140, 120)
+    #     # create a border around the selected field
+    #                         # if field.selected:
+    #                         #     field_border = pg.Rect(field.rect.x - 2, field.rect.y - 2, field.rect.width + 4, field.rect.height + 4)
+    #                         #     pg.draw.rect(self.screen, (0, 0, 255), field_border, 8)  
+
+
+###################### BORDERS ###############################
+
+
+     # for field in self.fields: # this will keep the fields updated
+        #     if field.selected and field.road == False:
+        #     # pg.draw.rect(self.screen, field.color, field.rect)
+        #         field_border = pg.Rect(field.rect.x - 2, field.rect.y - 2, field.rect.width + 4, field.rect.height + 4)
+        #         pg.draw.rect(self.screen, (250, 100, 100), field_border, 2)
+        
+        # print("dfj")
+
+
+
+
+
+
