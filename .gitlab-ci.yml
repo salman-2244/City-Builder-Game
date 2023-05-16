@@ -1,6 +1,4 @@
-
 image: python:2.7.18
-
 
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
@@ -15,14 +13,16 @@ before_script:
   - pip install virtualenv
   - virtualenv venv
   - source venv/bin/activate
+  - pip install pygame==1.9.6
 
 build:
-    script:
-        - mkdir -p build
+  script:
+    - mkdir -p build
 
 test:
   script:
-        - python -m unittest discover -s UnitTest -p "*_test.py"
+    - python -m unittest discover -s UnitTest -p "*_test.py"
+
 
 
 # deploy:
