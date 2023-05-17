@@ -11,6 +11,8 @@ from Field import Field
 
 # each zone is reppresented by a rectangle and buildings are drawn on top of it
 
+
+
 class Zone:
     def __init__(self, name, cost):
         self.name = name
@@ -89,13 +91,13 @@ class residential(Zone):
                 return True
     
 
-    def getName(self):
-        return "Residential"
+    # def getName(self):
+    #     return "Residential"
 
-    def drawImg(self, screen):
-        pass; 
-    def addResident(self, resident):
-        self.residents.update(resident)
+    # def drawImg(self, screen):
+    #     pass; 
+    # def addResident(self, resident):
+    #     self.residents.update(resident)
     def removeResident(self, resident):
         self.residents.remove(resident)
     def getResidents(self):
@@ -347,7 +349,7 @@ class general(Zone): #roads, change in UML
         self.roads = []
         self.max_roads = 0
         self.max_forests = 0
-        self.forests = []
+        self.forest = False
         self.police = 0
         self.stadium = 0
         self.typ = "general"
@@ -363,6 +365,7 @@ class general(Zone): #roads, change in UML
         self.stadiums = []
         self.max_employees = 0
         self.road = False
+        
         
         
     def setMaxEmployees(self):

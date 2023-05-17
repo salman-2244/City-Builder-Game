@@ -156,4 +156,53 @@ class Stadium(Building):
 #         def get_maintainance(self):
 #             return self.__maintainance
     
-            
+    
+class Forest():
+    def __init__(self,id, year, zone, fields):
+        self.id = id
+        self.year = year
+        self.zone = zone
+        self.radius = 150
+        self.age = 0
+        self.cost = 10
+        self.maintainance = 20
+        # self.picture = pygame.image.load("forest.png")
+        self.happy=0
+        self.seenBy = self.seen_By(fields)
+    
+    def seen_By(self, fields): # can be called periodcilly
+        seenby = []
+        for field in fields:
+            if field. x in range(self.zone.x, self.zone.x+self.radius) and field.y in range(self.zone.y, self.zone.y+self.radius):
+                if field.zone.typ == "Residential" and (field.x, field.y) not in seenby:
+                    seenby.append((field.x, field.y))
+        return seenby
+    
+    
+    def grow(self, currentYear, City):
+        if (currentYear - self.year) > 0 and (currentYear - self.year) < 10:
+            City.bank -= self.maintainance
+        else:
+            pass
+        
+    # use the reachables from the fields
+    def reduceImpact(self, fields, City):
+        reachables = []
+        fld = None
+        for field in fields:
+            if field.x == self.zone.x and field.y == self.zone.y:
+                fld = field
+                break
+        if fld != None:
+            reachables = fld.connectsTo()
+        cond1 = False; cond2 = False; 
+        for field in fields:
+            if (field.x == fld.x and (field.y in range(fld.y, fld.y+50) or (field.y in range(fld.y, fld.y-50)))):
+                cond1 = True
+            elif (field.y == fld.y and (field.x in range(fld.x, fld.x+50) or (field.x in range(fld.x, fld.x-50)))):
+                cond2 = True
+        if cond1 and cond2:
+            City.happiness += 5
+        else:
+            pass                
+
