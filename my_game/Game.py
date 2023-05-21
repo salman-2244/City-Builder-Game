@@ -440,7 +440,7 @@ class Game():  # initiating game class.
              # --------------------- Info ---------------------------------------
         time = self.currentTime(1)
         info = [self.City.name, self.City.population, self.City.bank, time,happiness]
-        font = pygame.freetype.SysFont("Arial", 20)
+        font = pg.freetype.SysFont("Arial", 20)
         # mb = menuBar(self.screen, 0, 40, screen.get_width(), 60, info)# creating a menu bar object
         # mb.displayItems(screen, info, (255,255,255) )
         # color = (0,0,204)
