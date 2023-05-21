@@ -21,7 +21,7 @@ build:
 
 test:
   script:
-    - python -m unittest discover -s UnitTest -p "*_test.py"
+    - python -m unittest discover -s my_game -p "*_test.py"
 
 
 
