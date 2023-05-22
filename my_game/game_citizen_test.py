@@ -1,3 +1,5 @@
+import sys
+sys.path.append('./my_game')  # importing sys library
 import pytest
 from Citizen import Citizen
 
