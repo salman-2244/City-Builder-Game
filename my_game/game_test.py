@@ -1,3 +1,5 @@
+import sys
+sys.path.append('./my_game')
 import pytest
 from City import City
 from Citizen import Citizen
