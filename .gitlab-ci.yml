@@ -22,7 +22,7 @@ build:
 
 test:
   script:
-    - pip install -r requirements.txt
+    - pip install -r my_game/requirements.txt
     - export PYTHONPATH="$PYTHONPATH:$CI_PROJECT_DIR"
     - pytest my_game -v
 
