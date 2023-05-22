@@ -4,6 +4,7 @@ import sys
 sys.path.append('./GUIGame')  # importing sys library
 sys.path.append('./Zones')
 sys.path.append('./Buildings')
+sys.path.append('./my_game')
 # from zone import general, industrial, residential, service
 from Field import Field
 
