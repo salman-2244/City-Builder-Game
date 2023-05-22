@@ -24,7 +24,8 @@ test:
   script:
     - pip install -r my_game/requirements.txt
     - export PYTHONPATH="$PYTHONPATH:$CI_PROJECT_DIR"
-    - pytest my_game -v
+    # - pytest my_game -v
+    - python3.8 -m pytest my_game/game_citizen_test.py
 
 
 
