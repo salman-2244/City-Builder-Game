@@ -1,5 +1,5 @@
 import pytest
-from Citizen.Citizen import Citizen
+from Citizen import Citizen
 
 class TestCitizen:
     def test_citizen_instance_creation(self):
