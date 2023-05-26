@@ -8,6 +8,9 @@ import os
 
 
 class MainMenu():
+  """
+  This class is responsible for the main menu of the game.
+  """
   pygame.display.set_caption("Main Menu")
 
   pygame.init()

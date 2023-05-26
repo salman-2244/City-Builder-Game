@@ -19,15 +19,20 @@ class Citizen():
         return {"id": self.id, "workZone": self.workZone, "salary": self.salary, "happy": self.happy, "home": self.home}
 
     def calcHappy(self, salary, tax, distance):
+        """_summary_
+
+        Args:
+            salary (int): Salary of the citizen
+            tax (Int): tax applied to the salary
+            distance (Int): distance from home to work
+
+        Returns:
+            _percentage of happiness
+        """
         self.happy = (salary - (salary * (tax/100))) - (distance * 0.1)
         if distance == 0: # unemployed
             self.happy = 0
         if self.happy < 0: 
             self.happy = 0
         return self.happy
-    # def isCloseWork(self, ) 
-    #check if the home is close to work
-    # citizen tax is applied 
-    # from their salaty to the city budgetß
-    # this will be applied from the residential class 
     
