@@ -1,15 +1,6 @@
 # City-Builder-Game
 
-Specification
-Specification
 
-Features:
-
-Disaster
-Forest
-How the game works:
-
-When clicked on the game icon the starting menu will appear where there will be an option to start the game and view the instructions. The default name of the city will be New York City, it can be changed in the System button.
 
 Start of the game
 
@@ -47,6 +38,16 @@ Technologies used
 Python
 PyGame
 VSCode
+
+Specification
+
+Features:
+
+Disaster
+Forest
+How the game works:
+
+When clicked on the game icon the starting menu will appear where there will be an option to start the game and view the instructions. The default name of the city will be New York City, it can be changed in the System button.
 Developed by 2 developers:
 
 Muhammad Salaman Ahmed &
